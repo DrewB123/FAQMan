@@ -48,7 +48,6 @@ error = ""
 class MainHandler(webapp2.RequestHandler):
 	def get(self):
 		template = JINJA_ENVIRONMENT.get_template('home-page.html')
-		users = User.query().fetch()		
 		self.response.write(template.render({'error':error}))
 	
 	def post(self):
