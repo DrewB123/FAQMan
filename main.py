@@ -57,22 +57,20 @@ class MainHandler(webapp2.RequestHandler):
 		login = self.request.get("user_email")
 		pw = self.request.get("pass_word")
 		user = User.query(User.email == login)
-		error=""
 		
 		if user.count() != 1:
-			error = "Invalid Username!"
-			self.redirect('/')
+			error = "Invalid email!"
+			return self.redirect('/')
 			
 		else:
 			global u
 			u = user.get()
 			#checks to see if the password is correct
 			if u.password == pw:
-				#get the number of classes enrolled to use at loop end point in the HTML
 				self.redirect('/login')
 			else:
 				error = "Incorrect password!"
-				self.response.write(template.render({'error':error}))	
+				return self.redirect('/')	
 
 class SignupHandler(webapp2.RequestHandler):
 	def get(self):
