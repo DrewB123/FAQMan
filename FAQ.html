@@ -64,6 +64,7 @@
 </header>
 <section class="FAQ">
 
+{% if user.isInstructor == False %}
 	<div class="faq-items">
 		<ul>
 		{% for q in questions %}
@@ -76,7 +77,22 @@
 			</div>
 			</li><br><br>
 		{% endfor %}
-		
+{% endif %}
+
+{% if user.isInstructor == True %}
+	<div class="faq-items">
+		<ul>
+		{% for q in questions %}
+		<li class = "question">
+		<h2 class = "heading"> Question:</h2>
+			{{q.question}}
+			<div class = "answer">
+			<h2 class = "heading"> Answer: </h2>
+				<p>{{q.answer}}</p>
+			</div>
+			</li><br><br>
+		{% endfor %}
+{% endif %}
 		
 		
 		
