@@ -26,7 +26,7 @@ class Questions(ndb.Model):
 	question = ndb.StringProperty()
 	answer = ndb.StringProperty()
 	classQ = ndb.StringProperty()
-	answered = ndb.BooleanProperty()
+	inFAQ = ndb.BooleanProperty()
 	
 	
 class User(ndb.Model):
@@ -47,7 +47,9 @@ error = ""
 	
 class MainHandler(webapp2.RequestHandler):
 	def get(self):
-		template = JINJA_ENVIRONMENT.get_template('home-page.html')
+		question_class = ""
+		addedQuestion = ""
+		template = JINJA_ENVIRONMENT.get_template('home-page.html')	
 		self.response.write(template.render({'error':error}))
 	
 	def post(self):
@@ -60,16 +62,18 @@ class MainHandler(webapp2.RequestHandler):
 		if user.count() != 1:
 			error = "Invalid email!"
 			return self.redirect('/')
-			
+		
 		else:
 			global u
 			u = user.get()
 			#checks to see if the password is correct
 			if u.password == pw:
-				self.redirect('/login')
+				question_class = ""
+				addedQuestion = ""
+				return self.redirect('/login')
 			else:
 				error = "Incorrect password!"
-				return self.redirect('/')	
+				return self.redirect('/')
 
 class SignupHandler(webapp2.RequestHandler):
 	def get(self):
@@ -156,49 +160,78 @@ class LoginHandler(webapp2.RequestHandler):
 		numClasses = len(u.classes)
 		if u.isInstructor == True:
 			template = JINJA_ENVIRONMENT.get_template('Faculty_landing.html')
-			self.response.write(template.render({'user':u, 'classes':numClasses, 'questions':questions, 
-							     'added':addedQuestion, 'question_class':question_class}))
+			self.response.write(template.render({'user':u, 'classes':numClasses, 'questions':questions, 'added':addedQuestion,
+												'question_class':question_class}))
 			
 		else:
 			template = JINJA_ENVIRONMENT.get_template('student_landing.html')
-			self.response.write(template.render({'user':u, 'classes':numClasses, 'questions':questions,
-							     'added':addedQuestion, 'question_class':question_class}))
+			self.response.write(template.render({'user':u, 'classes':numClasses, 'questions':questions, 'added':addedQuestion,
+												'question_class':question_class}))
 	
 	def post(self):
 		global question_class, addedQuestion
 		questions = Questions.query().fetch()
-		newQ = self.request.get("new-question")
-		question_class = self.request.get("add-new-question")
-		
 		
 		if self.request.get("oldpassword") and self.request.get("newpassword") and self.request.get("confirmnewpassword"):
-			
-			if self.request.get("oldpassword") != u.password:
-				addedQuestion = "Incorrect old password input!"
-				question_class = ""
-				self.redirect('/login')
 				
-			elif self.request.get("newpassword") == self.request.get("confirmnewpassword"):
-				u.password = self.request.get("newpassword")
-				u.put()
-				addedQuestion = "Your password has been changed!"
-				question_class = ""
-				self.redirect('/login')
-			else:
-				addedQuestion = "New passwords don't match "
-				question_class = ""
-				self.redirect('/login')
+				if self.request.get("oldpassword") != u.password:
+					addedQuestion = "Incorrect old password input!"
+					question_class = ""
+					return self.redirect('/login')
+					
+				elif self.request.get("newpassword") == self.request.get("confirmnewpassword"):
+					u.password = self.request.get("newpassword")
+					u.put()
+					addedQuestion = "Your password has been changed!"
+					question_class = ""
+					return self.redirect('/login')
+				else:
+					addedQuestion = "New passwords don't match "
+					question_class = ""
+					return self.redirect('/login')
 		
-		elif self.request.get("new-question"):
-			Q = Questions(question = newQ, classQ = question_class, answered = False)
-			Q.put()
-			addedQuestion = "You're question has been added to the list of questions for "
-			self.redirect('/login')
+		elif u.isInstructor == True:
+			question_class = self.request.get("new-entry")
 			
+			if self.request.get("question") and self.request.get("answer"):
+				question = self.request.get("question")
+				Q = Questions.query(Questions.question == question)
+				q = Q.get()
+				addedQuestion = q.question
+				q.answer = self.request.get("answer")
+				if self.request.get("Add_to_FAQ"):
+					q.inFAQ = True
+					question_class = "has been answered and added to class FAQ"
+				q.put()
+				question_class = "has been answered"
+				self.redirect('/login')
+			
+		
 		else:
-			addedQuestion = "You have to ask a question for someone to be able to answer it!"
-			question_class = ""
-			self.redirect('/login')
+			newQ = self.request.get("new-question")
+			question_class = self.request.get("add-new-question")
+			
+			if self.request.get("new-question"):
+				Q = Questions(question = newQ, classQ = question_class, answer = "")
+				Q.put()
+				addedQuestion = "You're question has been added to the list of questions for "
+				return self.redirect('/login')
+				
+			else:
+				addedQuestion = "You have to ask a question for someone to be able to answer it!"
+				question_class = ""
+				return self.redirect('/login')
+			
+class FAQHandler(webapp2.RequestHandler):
+	def get(self):
+		FAQ_questions = Questions.query(Questions.inFAQ == True, Questions.classQ == question_class).fetch()
+		template = JINJA_ENVIRONMENT.get_template('FAQ.html')
+		self.response.write(template.render({'questions':FAQ_questions, 'class':question_class}))
+											
+	def post(self):
+		global question_class
+		question_class = self.request.get("class")
+		self.redirect('/FAQ')
 
 			
 class ClearHandler(webapp2.RequestHandler):
@@ -219,5 +252,6 @@ app = webapp2.WSGIApplication([
 	('/signup', SignupHandler),
 	('/success', SuccessHandler),
 	('/login', LoginHandler),
+	('/FAQ', FAQHandler),
 	('/clear', ClearHandler)
 ], debug=True)
