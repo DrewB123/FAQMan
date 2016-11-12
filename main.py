@@ -47,6 +47,7 @@ error = ""
 	
 class MainHandler(webapp2.RequestHandler):
 	def get(self):
+		global question_class, addedQuestion
 		question_class = ""
 		addedQuestion = ""
 		template = JINJA_ENVIRONMENT.get_template('home-page.html')	
@@ -68,8 +69,6 @@ class MainHandler(webapp2.RequestHandler):
 			u = user.get()
 			#checks to see if the password is correct
 			if u.password == pw:
-				question_class = ""
-				addedQuestion = ""
 				return self.redirect('/login')
 			else:
 				error = "Incorrect password!"
