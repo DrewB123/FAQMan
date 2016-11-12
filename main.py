@@ -49,10 +49,11 @@ class MainHandler(webapp2.RequestHandler):
 	def get(self):
 		template = JINJA_ENVIRONMENT.get_template('home-page.html')
 		users = User.query().fetch()		
-		self.response.write(template.render())
+		self.response.write(template.render({'error':error}))
 	
 	def post(self):
 		template = JINJA_ENVIRONMENT.get_template('home-page.html')
+		global error
 		login = self.request.get("user_email")
 		pw = self.request.get("pass_word")
 		user = User.query(User.email == login)
@@ -60,7 +61,7 @@ class MainHandler(webapp2.RequestHandler):
 		
 		if user.count() != 1:
 			error = "Invalid Username!"
-			self.response.write(template.render({'error':error}))
+			self.redirect('/')
 			
 		else:
 			global u
@@ -158,13 +159,13 @@ class LoginHandler(webapp2.RequestHandler):
 		numClasses = len(u.classes)
 		if u.isInstructor == True:
 			template = JINJA_ENVIRONMENT.get_template('Faculty_landing.html')
-			self.response.write(template.render({'user':u, 'classes':numClasses, 'questions':questions, 'added':addedQuestion,
-												'question_class':question_class}))
+			self.response.write(template.render({'user':u, 'classes':numClasses, 'questions':questions, 
+							     'added':addedQuestion, 'question_class':question_class}))
 			
 		else:
 			template = JINJA_ENVIRONMENT.get_template('student_landing.html')
-			self.response.write(template.render({'user':u, 'classes':numClasses, 'questions':questions, 'added':addedQuestion,
-												'question_class':question_class}))
+			self.response.write(template.render({'user':u, 'classes':numClasses, 'questions':questions,
+							     'added':addedQuestion, 'question_class':question_class}))
 	
 	def post(self):
 		global question_class, addedQuestion
