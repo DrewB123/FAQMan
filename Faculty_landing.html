@@ -29,6 +29,19 @@
 			width: 500px;
 		}
 		
+		
+		.addA{
+			width: 300px;
+			height: 50px;
+			position:relative;
+		}
+
+		#SFAQ{
+			position:absolute;
+			top:600px;
+			left:145px;
+		}
+		
 		#logo {
 			height: 40px;
 		}
@@ -64,50 +77,45 @@
 			<br><br>
 			<input type="submit">
 		</details>
+	</form>
 	</div>
 
 	<div class="Classes_Container" style="padding: 25px;">
 
 		<h3>{{user.Fname}}'s FAQ Listings</h3>
 
-		{% for i in range(0, classes) %}
-			<details>
-				<summary>{{user.classes[i]}}</summary>
-					<details>
-						<summary>Questions for {{user.classes[i]}}</summary>
-							<ul>
-								{% for q in questions %}
-									{% if q.classQ == user.classes[i] %}
-									<li>{{q.question}}</li>
-									{% endif %}
-								{% endfor %}
-							</ul>
-					</details>
-			</details>
-		{% endfor %}
+		<form method="post" action = "/FAQ">
+			{% for i in range(0, classes) %}
+				{{user.classes[i]}}</summary>
+					<input type = "radio" name = "class" value = "{{user.classes[i]}}"> <br>			
+			{% endfor %}
+			<input type = "submit" value = "Go to selected FAQ">
+		</form>
 	
-		<div>
-			<h3>Add an FAQ entry for: </h3>
-			<select name="add-new-entry">
-				{% for i in range(0, classes) %}
-					<option value="{{user.classes[i]}}">{{user.classes[i]}}</option>
-				{% endfor %}
-			</select>
-		</div>
-		<h4>{{added}}{{question_class}}</h4>
-	</form>
+		<form method = "post" action = "/login"
+			<div>
+				<h3>Answer to selected question </h3>
+				<textarea class = "addA" name = "answer"></textarea></p><br>
+				<b>Check here to add question to FAQ</b> <input type = "checkbox" name = "Add_to_FAQ">
+				<input id = "SFAQ" type = "submit" value = "Answer">
+				</select>
+				
+			</div>
+			<h4>{{added}} {{question_class}}</h4>
 
 	<div id="pending-questions" style="padding: 25px;">
 		<h4>Pending Questions</h4>
 			{%for i in range(0, classes) %}
 			<div>
-				<h6>{{user.classes[i]}}</h6>
+				<h4>{{user.classes[i]}}</h4>
 					{% for q in questions %}
-						{% if q.classQ==user.classes[i] and q.answered == False %}
-							<p>{{q.question}}</p>
+						{% if q.classQ==user.classes[i] and q.answer == "" %}
+							<p> <br>{{q.question}}<input type = "radio" name = "question" value = "{{q.question}}"></p>
 						{% endif %}
 					{% endfor %}
 			</div>
 			{% endfor %}
+			</form>
+			<a href='/'> Sign out </a>
 	</div>
 </html>
