@@ -1,0 +1,281 @@
+<!DOCTYPE>
+<html>
+	<head>
+		<title>FAQMan: Home Page</title>
+		<!-- To use this font for other pages, copy this link, and put it in the head. -->
+		<link href="home-page.css" rel="stylesheet">
+		<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+		<!--<script> var toggleList = function(listID) {
+					// Gets the element's JS representation
+					var listElement = document.getElementById(listID); 
+					
+					// Toggles
+					if (listElement.style.display === "none") {
+						listElement.style.display = ""; 
+					} else { 
+						listElement.style.display = "none"; 
+					}; 
+				};
+		</script>-->
+		
+		
+		<style>
+			body {
+				background-color: #ECF0F1; 
+				font-family: 'Roboto', sans-serif;
+				color: #4F595C; 
+				margin: 0px; 
+				padding: 0px; 
+			}
+
+			ul {
+				list-style-type: none; 
+			}
+
+			.button {
+				border-style: none;
+				border-width: 1px; 
+				border-radius: 4px 3px 4px / 5px 5px; 
+				background-color: #D7DEE6; 
+				color: #F96E5B; 
+			}
+
+			.course-label {
+				background-color: #5473A1; 
+				cursor: pointer; 
+				color: #ECF0F1; 
+				font-weight: 900;
+				height: 30px; 
+				width: 350px; 
+				border-width: 1px; 
+				border-style: solid; 
+				border-color: #ECF0F1;
+				border-radius: 4px 3px 4px / 5px 5px; 
+				padding-left: 8px; 
+	
+			}
+
+			.course-div {
+				width:350px; 
+				background-color: #D7DEE6; 
+				color: #F96E5B; 
+			}
+
+			#btn {
+				margin-right: 10px; 
+				margin-top: 3px; 
+				float: right; 
+			}
+
+			#catchphrase { 
+				font-style: italic; 
+				color: #4F595C; 
+			}
+
+			.container {
+				height: 700px; 
+			}
+
+			#email {
+				width: 175px; 
+				margin-left: 9px; 
+				margin-bottom: 3px; 
+			}
+
+			#FAQ-list {
+				background-color: #D7DEE6; 
+				padding: 10px 20px 10px 20px;
+				width: 500px;
+				float: left;
+				border-style: none; 
+				border-width: 1px; 
+					border-radius: 4px 3px 4px / 5px 5px;
+				font-weight: 800; 
+			}
+
+			#faq-lab {
+				font-weight: 800; 
+			}
+
+			#header-text {
+				padding-top: 10px; 
+				padding-bottom: 20px; 
+				margin-top: 20px; 
+				margin-bottom: 10px; 
+			}
+
+			#log-div {
+				position: absolute;
+				top: 0;
+				right: 0; 
+				background-color: #5473A1; 
+				color: #ECF0F1; 
+				width: 300px;
+				padding: 10px 20px 10px 20px;
+				float: right;
+			}
+
+			#log-summary {
+				cursor: pointer; 
+				width: 40%;
+				height: 30px; 
+			}
+
+			#logo {
+				height: 40px;
+				margin-top: 3px; 
+			}
+
+			#password {
+				width: 175px; 
+				margin-left: 40px; 
+				margin-top: 3px; 
+				margin-bottom: 5px; 
+			}
+
+			#search-btn {
+				margin-left: 40px; 
+				float: right; 
+			}
+
+			#search-div {
+				background-color: #5473A1; 
+				color: #ECF0F1; 
+				width: 500px;
+				padding: 10px 20px 10px 20px;
+				border-style: none; 
+				border-width: 1px; 
+				border-radius: 4px 3px 4px / 5px 5px; 
+			}
+
+			#THEBLUEONE {
+				background-color: #F96E5B; 
+				height: 50px; 
+				width: 100%; 
+			}
+			#the-one-true-div {
+				height: 150px; 
+			}
+
+			#the-title {
+				color: #4F595C;
+				display: inline-block; 
+				margin-left: 2px; 
+			}
+
+			#title-sub-div {
+				float: left; 
+			}
+			#error{
+				color:#F96E5B;
+			}
+		</style>
+		
+	</head>
+		<body> 
+		<form action = '/home' method="POST">
+			<div id="the-one-true-div">
+				<div id="THEBLUEONE"></div>
+				<div id="title-sub-div">
+					<img id="logo" src="http://i.imgur.com/tYSNXFo.png"/>
+					<h1 id="the-title">FAQMan</h1>
+					<h5 id="catchphrase">Let everyone else ask the stupid questions for you.</h5>
+				</div>
+				<div id="log-div"> 
+					<details>
+						<summary id="log-summary">Login</summary>
+						
+							<div>	
+								<h4 id = "error">{{error}}</h4>
+								<label for="email">Email Address</label>
+								<input type="text" id="email"  name="user_email"/>
+							</div>
+							<div>
+								<label for="password">Password</label>
+								<input type="password" id="password"  name="pass_word"/>
+							</div>
+							<div>
+								<button id="btn" class="button" type="submit">SUBMIT!</button>
+							</div>
+						
+					</details>
+				</div>
+			</div>
+			<div id="header-text">
+				<span>
+					<p>Hey you've found your way to FAQMan. That's cool. Anyway, if you're a student, your instructor probably sent you here so that 
+					you can have all the answers. Not to your homework, though; just to the questions they've determined were important enough -- or frequently- 
+					asked enough-- to be submitted to this spiffy open source-ish resource aggregator.
+					</p>
+					<p>Instructors: You're welcome. 
+					Below, you can find a list of FAQs, sorted by course. You can read the FAQs for any course you want, but to make a contribution to our glorious
+					repository of knowledge, you have to log in. 
+					This is filler text until we write real copy. :O
+					</p>
+				</span>
+			</div>
+			<div class="container">
+				<div id="FAQ-list">
+					<h3 id="faq-lab">FAQ LISTINGS</h3>
+					<details>
+						<summary class="course-label">
+							Anthropology
+						</summary>
+						<div class="course-div">
+							<ul id="anthro-list">
+								<li>ANTHRO 101</li>
+								<li>ANTHRO 102</li>
+								<li>ANTHRO 250</li>
+								<li>ANTHRO 351</li>
+							</ul>
+						</div>
+					</details>
+					<details>
+						<summary class="course-label">
+							Biology
+						</summary>
+						<div class="course-div">
+							<ul id="bio-list">
+								<li>BIO 101</li>
+								<li>BIO 102</li>
+								<li>BIO 250</li>
+								<li>BIO 431</li>
+							</ul>
+						</div>
+					</details>
+					<details>
+						<summary class="course-label">
+							Computer Science
+						</summary>
+						<div class="course-div">
+							<ul id="cs-list">
+								<li>COMPSCI 101</li>
+								<li>COMPSCI 250</li>
+								<li>COMPSCI 351</li>
+								<li>COMPSCI 361</li>
+							</ul>
+						</div>
+					</details>
+					<details>
+						<summary class="course-label">
+							Underwater Basket Weaving
+						</summary>
+						<div class="course-div">
+							<ul id="uw-list">
+								<li>UWBW 101</li>
+								<li>UWBW 250</li>
+								<li>UWBW ULTIMATE</li>
+							</ul>
+						</div>
+					</details>
+				</div>
+			</div>
+			<div id="search-div">
+				<label for="search-box">Search for a course.</label>
+				<input id="search-box" type="text">
+				<button id="search-btn" class="button" type="submit">SUBMIT SEARCH!</button>
+			</div>
+			<a href = '/signup'> Register Here </a> 
+		</form>
+		</body>
+</html>

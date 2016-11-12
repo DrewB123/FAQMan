@@ -1,0 +1,146 @@
+body {
+	background-color: #ECF0F1; 
+	font-family: 'Roboto', sans-serif;
+	color: #4F595C; 
+	margin: 0px; 
+	padding: 0px; 
+}
+
+ul {
+	list-style-type: none; 
+}
+
+.button {
+	border-style: none;
+	border-width: 1px; 
+	border-radius: 4px 3px 4px / 5px 5px; 
+	background-color: #D7DEE6; 
+	color: #F96E5B; 
+}
+
+.course-label {
+	background-color: #5473A1; 
+	cursor: pointer; 
+	color: #ECF0F1; 
+	font-weight: 900;
+	height: 30px; 
+	width: 350px; 
+	border-width: 1px; 
+	border-style: solid; 
+	border-color: #ECF0F1;
+	border-radius: 4px 3px 4px / 5px 5px; 
+	padding-left: 8px; 
+	
+}
+
+.course-div {
+	width:350px; 
+	background-color: #D7DEE6; 
+	color: #F96E5B; 
+}
+
+#btn {
+	margin-right: 10px; 
+	margin-top: 3px; 
+	float: right; 
+}
+
+#catchphrase { 
+	font-style: italic; 
+	color: #4F595C; 
+}
+
+.container {
+	height: 700px; 
+}
+
+#email {
+	width: 175px; 
+	margin-left: 9px; 
+	margin-bottom: 3px; 
+}
+
+#FAQ-list {
+	background-color: #D7DEE6; 
+	padding: 10px 20px 10px 20px;
+	width: 500px;
+	float: left;
+	border-style: none; 
+	border-width: 1px; 
+	border-radius: 4px 3px 4px / 5px 5px;
+	font-weight: 800; 
+}
+
+#faq-lab {
+	font-weight: 800; 
+}
+
+#header-text {
+	padding-top: 10px; 
+	padding-bottom: 20px; 
+	margin-top: 20px; 
+	margin-bottom: 10px; 
+}
+
+#log-div {
+	position: absolute;
+	top: 0;
+	right: 0; 
+	background-color: #5473A1; 
+	color: #ECF0F1; 
+	width: 300px;
+	padding: 10px 20px 10px 20px;
+	float: right;
+}
+
+#log-summary {
+	cursor: pointer; 
+	width: 40%;
+	height: 30px; 
+}
+
+#logo {
+	height: 40px;
+	margin-top: 3px; 
+}
+
+#password {
+	width: 175px; 
+	margin-left: 40px; 
+	margin-top: 3px; 
+	margin-bottom: 5px; 
+}
+
+#search-btn {
+	margin-left: 40px; 
+	float: right; 
+}
+
+#search-div {
+	background-color: #5473A1; 
+	color: #ECF0F1; 
+	width: 500px;
+	padding: 10px 20px 10px 20px;
+	border-style: none; 
+	border-width: 1px; 
+	border-radius: 4px 3px 4px / 5px 5px; 
+}
+
+#THEBLUEONE {
+	background-color: #F96E5B; 
+	height: 50px; 
+	width: 100%; 
+}
+#the-one-true-div {
+	height: 150px; 
+}
+
+#the-title {
+	color: #4F595C;
+	display: inline-block; 
+	margin-left: 2px; 
+}
+
+#title-sub-div {
+	float: left; 
+}

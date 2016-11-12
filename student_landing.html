@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+	<style>
+		.Details_Container {
+			width: 500px
+		}
+		
+		body {
+			background-color: #ECF0F1;
+			font-family: 'Roboto', sans-serif;
+		}
+		
+		#pending-questions {
+			position: absolute;
+			top: 8px;
+			left: 558px;
+			width: 500px;
+			height: 545px;
+		}
+		
+		.Classes_Container {
+			width: 500px;
+		}
+		
+		.FAQ {
+			width: 500px;
+		}
+		
+		#logo {
+			height: 40px;
+		}
+		#THEBLUEONE {
+			background-color: #F96E5B; 
+			height: 50px; 
+			width: 100%; 
+			}	
+	</style>
+</head>
+
+<body>
+
+	<div id="THEBLUEONE"></div>
+	<div class="Details_Container" style="padding: 25px;">
+	
+		
+		<h2><img id="logo" src="http://i.imgur.com/tYSNXFo.png" />Hey {{user.Fname}} {{user.Lname}}. Welcome to your Student Account Page.</h2>
+
+		<details>
+			<summary>{{user.Fname}} 's Account</summary>
+			<ul>
+				<li>Name: {{user.Fname}}  {{user.Lname}} </li>
+				<li>Email Address: {{user.email}} </li>
+			</ul>
+
+	<form method="post" action="/login">
+			<h2>Change Password</h2>
+			Old Password:<br>
+			<input type="password" name="oldpassword">
+			<br> New Password:<br>
+			<input type="password" name="newpassword">
+			<br> Confirm New Password:<br>
+			<input type="password" name="confirmnewpassword">
+			<br><br>
+			<input type="submit">
+		</details>
+	</div>
+
+	<div class="Classes_Container" style="padding: 25px;">
+
+		<h3>FAQs for {{user.Fname}}'s Classes</h3>
+
+		{% for i in range(0, classes) %}
+			<details>
+				<summary>{{user.classes[i]}}</summary>
+					<details>
+						<summary>Questions for {{user.classes[i]}}</summary>
+							<ul>
+								{% for q in questions %}
+									{% if q.classQ == user.classes[i] %}
+										<li>{{q.question}}</li>
+									{% endif %}
+								{% endfor %}
+							</ul>
+					</details>
+			</details>
+		{% endfor %}
+
+		<div>
+			<h4>Submit a new question for: </h4>
+			<select name="add-new-question">
+				{% for i in range(0, classes) %}
+					<option value="{{user.classes[i]}}">{{user.classes[i]}}</option>
+				{% endfor %}
+			</select>
+			<label for="new-question">Enter your question below.</label>
+			<input type="textarea" id="new-question" name="new-question">
+			<input type="hidden" name="email" value="{{usersEmail}}">
+			<input type="hidden" name="password" value="{{usersPassword}}">
+			<button type="submit" id="question-submit">Submit your question.</button>
+			<h4>{{added}}{{question_class}}</h4>
+		</div>
+	</form>
+
+</html>

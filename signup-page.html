@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+
+
+<head>
+
+  <title>Student Registration</Title>
+  <style>
+	body {
+	background-color: #ECF0F1; 
+		font-family: 'Roboto', sans-serif;
+		color: #4F595C; 
+		margin: 0px; 
+		padding: 0px; 
+	}
+	#header-text {
+		padding-top: 10px; 
+		padding-bottom: 20px; 
+		margin-top: 20px; 
+		margin-bottom: 10px; 
+	}
+	#orangeBox {
+		background-color: #F96E5B; 
+		height: 50px; 
+		width: 100%; 
+	}
+	.button {
+		border-style: none;
+		border-width: 1px; 
+		border-radius: 4px 3px 4px / 5px 5px; 
+		background-color: #D7DEE6; 
+		color: #F96E5B; 
+	}
+	#course-list{
+		background-color: #D7DEE6; 
+		padding: 10px 20px 10px 20px;
+		width: 500px;
+		float: left;
+		border-style: none; 
+		border-width: 1px; 
+		border-radius: 4px 3px 4px / 5px 5px;
+		font-weight: 800; 
+	}
+	#error{
+		color:#F96E5B;
+	}
+	#isInstructor{
+		color:#F96E5B;
+		}
+	</style>
+</head>
+
+<body>
+<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+<div id="orangeBox"></div>
+<center>
+  <center>
+    <h1> Student Registration</h1>
+</center>
+
+
+<form action='/signup' method = 'POST'>
+	<center>
+		<h2>Welcome to FAQMan!</h2>
+		
+		<h3 id = "error">{{error}}</h3>
+		<br> First Name: <input type="text" name="firstname">
+		<br><br>Last name: <input type="text" name="lastname">
+		<br><br> Email: <input type="text" name="email">
+		<br><br>
+		Instructor code: <input type="password" name = "isInstructor"><br><br>
+
+	<br> Classes(check all that you're in!):
+	<br>
+	<center>
+		<div class = "containter">
+		<div id ="course-list">
+		<h4 id = "course-name">Anthropology</h4>
+	</center>
+	<input type="checkbox" id = "b1" name="b1" value="ANTHRO101">ANTHRO 101 <br>
+	<input type="checkbox" id = "b2" name="b2" value="ANTHRO102"> ANTHRO 102<br>
+	<input type="checkbox" id = "b3" name="b3" value="ANTHRO250">ANTHRO 250 <br>
+	<input type="checkbox" id = "b4" name="b4" value="ANTHRO351"> ANTHRO 351<br>
+	<br>
+	<center>
+		<div class = "containter">
+		<div id ="course-list">
+		<h4 id = "course-name">Biology</h4>
+	</center>
+	<input type="checkbox" id = "b5" name="b5" value="BIO101">BIO 101 <br>
+	<input type="checkbox" id = "b6" name="b6" value="BIO102">BIO 102<br>
+	<input type="checkbox" id = "b7" name="b7" value="BIO250">BIO 250 <br>
+	<input type="checkbox" id = "b8" name="b8" value="BIO431"> BIO 431<br>
+	<br>
+	<center>
+		<div class = "containter">
+		<div id ="course-list">
+		<h4>Computer Science</h4>
+	</center>
+	<input type="checkbox" id = "b9" name="b9" value="COMPSCI101">COMPSCI 101 <br>
+	<input type="checkbox" id = "b10" name="b10" value="COMPSCI250">COMPSCI 250 <br>
+	<input type="checkbox" id = "b11" name="b11" value="COMPSCI351">COMPSCI 351 <br>
+	<input type="checkbox" id = "b12" name="b12" value="COMPSCI361">COMPSCI 361 <br>
+	<br>
+	<center>
+		<div class = "containter">
+		<div id ="course-list">
+		<h4>Underwater Basket Weaving</h4>
+	</center>
+	<input type="checkbox" id = "b13" name="b13" value="UWBW101">UWBW 101 <br>
+	<input type="checkbox" id = "b14" name="b14" value="UWBW251">UWBW 251 <br>
+	<input type="checkbox" id = "b15" name="b15" value="UWBWULT">UWBW ULTIMATE <br>
+ 
+	<center><button id="send-btn" class="button" type="submit">Signup</button></center>
+	
+	<a href='/home'> Go home!!!! </a><br><br><br>
+	<a href='/clear'>Clear data</a>
+	</p>
+</body>
+
+</html>
