@@ -3,7 +3,7 @@
 
 <head>
 	<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
-	<title> {{user.Fname}}'s login page </title>
+	<title> {{user.Fname}}'s Login Page</title>
 	<style>
 		.Details_Container {
 			width: 500px
@@ -38,9 +38,17 @@
 		}
 
 		#SFAQ{
-			position:absolute;
-			top:600px;
+			position:relative;
 			left:145px;
+			top:20px;
+			background-color: #D7DEE6; 
+			color: #F96E5B; 
+		}
+		
+		.buttons{
+			background-color: #D7DEE6; 
+			color: #F96E5B; 
+			font-weight:bold;
 		}
 		
 		#logo {
@@ -76,7 +84,7 @@
 			<br> Confirm New Password:<br>
 			<input type="password" name="confirmnewpassword">
 			<br><br>
-			<input type="submit">
+			<input type="submit" class = "buttons" id = "bPassword">
 		</details>
 	</form>
 	</div>
@@ -90,7 +98,7 @@
 				{{user.classes[i]}}</summary>
 					<input type = "radio" name = "class" value = "{{user.classes[i]}}"> <br>			
 			{% endfor %}
-			<input type = "submit" value = "Go to selected FAQ">
+			<input type = "submit" id = "bFAQ" class = "buttons" value = "Go to selected FAQ">
 		</form>
 	
 		<form method = "post" action = "/login"
@@ -98,7 +106,7 @@
 				<h3>Answer to selected question </h3>
 				<textarea class = "addA" name = "answer"></textarea></p><br>
 				<b>Check here to add question to FAQ</b> <input type = "checkbox" name = "Add_to_FAQ"><br>
-				<input id = "SFAQ" type = "submit" value = "Answer">
+				<input type = "submit" id = "SFAQ" value = "Answer">
 				</select>
 				
 			</div>
