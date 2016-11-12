@@ -3,6 +3,7 @@
 
 <head>
 	<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+	<title> {{user.Fname}}'s Login Page</title>
 	<style>
 		.Details_Container {
 			width: 500px
@@ -32,6 +33,12 @@
 		#logo {
 			height: 40px;
 		}
+		
+		#question-submit{
+		background-color: #D7DEE6; 
+		color: #F96E5B; 
+		}
+		
 		#THEBLUEONE {
 			background-color: #F96E5B; 
 			height: 50px; 
@@ -101,6 +108,7 @@
 			<input type="hidden" name="password" value="{{usersPassword}}">
 			<button type="submit" id="question-submit">Submit your question.</button>
 			<h4>{{added}}{{question_class}}</h4>
+			<a href='/'> Sign out </a>
 		</div>
 	</form>
 
