@@ -47,7 +47,7 @@ error = ""
 	
 class MainHandler(webapp2.RequestHandler):
 	def get(self):
-		global question_class, addedQuestion
+		global question_class, addedQuestion, error
 		question_class = ""
 		addedQuestion = ""
 		template = JINJA_ENVIRONMENT.get_template('home-page.html')	
@@ -69,6 +69,7 @@ class MainHandler(webapp2.RequestHandler):
 			u = user.get()
 			#checks to see if the password is correct
 			if u.password == pw:
+				error = ""
 				return self.redirect('/login')
 			else:
 				error = "Incorrect password!"
@@ -138,6 +139,7 @@ class SignupHandler(webapp2.RequestHandler):
 					cl = "b" + str(i)
 					if(self.request.get(cl)):
 						u.classes.append(self.request.get(cl))
+				error = ""
 				u.put()
 				return self.redirect('/success')
 		
@@ -225,7 +227,8 @@ class FAQHandler(webapp2.RequestHandler):
 	def get(self):
 		FAQ_questions = Questions.query(Questions.inFAQ == True, Questions.classQ == question_class).fetch()
 		template = JINJA_ENVIRONMENT.get_template('FAQ.html')
-		self.response.write(template.render({'questions':FAQ_questions, 'class':question_class}))
+		self.response.write(template.render({'questions':FAQ_questions, 'class':question_class,
+											'user':u}))
 											
 	def post(self):
 		global question_class
