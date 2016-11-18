@@ -110,7 +110,7 @@
 				</select>
 				
 			</div>
-			<h4>{{added}} {{question_class}}</h4>
+			<h4>{{added}}</h4>
 
 	<div id="pending-questions" style="padding: 25px;">
 		<h4>Pending Questions</h4>
@@ -119,7 +119,7 @@
 				<h4>{{user.classes[i]}}</h4>
 					{% for q in questions %}
 						{% if q.classQ==user.classes[i] and q.answer == "" %}
-							<p> <br>{{q.question}}<input type = "radio" name = "question" value = "{{q.question}}"></p>
+							<p> <br>{{q.question}}<input type = "radio" name = "question" value = "{{q.id|string}}"></p>
 						{% endif %}
 					{% endfor %}
 			</div>
