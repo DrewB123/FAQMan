@@ -27,6 +27,7 @@ class Questions(ndb.Model):
 	answer = ndb.StringProperty()
 	classQ = ndb.StringProperty()
 	inFAQ = ndb.BooleanProperty()
+	id = ndb.IntegerProperty()
 	
 	
 class User(ndb.Model):
@@ -43,8 +44,20 @@ u = User()
 question_class = ""
 addedQuestion = ""
 error = ""
+Qcount = 0
+
+
+# On startup get a count of all questions to set Qcount
+# and go to the home page.
+class StartupHandler(webapp2.RequestHandler):
+	def get(self):
+		global Qcount
+		Qcount = Questions.query().count()
+		self.redirect('/home')
 	
-	
+	def post(self):
+		self.redirect('/home')
+
 class MainHandler(webapp2.RequestHandler):
 	def get(self):
 		global question_class, addedQuestion, error
@@ -62,7 +75,7 @@ class MainHandler(webapp2.RequestHandler):
 		
 		if user.count() != 1:
 			error = "Invalid email!"
-			return self.redirect('/')
+			return self.redirect('/home')
 		
 		else:
 			global u
@@ -73,7 +86,7 @@ class MainHandler(webapp2.RequestHandler):
 				return self.redirect('/login')
 			else:
 				error = "Incorrect password!"
-				return self.redirect('/')
+				return self.redirect('/home')
 
 class SignupHandler(webapp2.RequestHandler):
 	def get(self):
@@ -83,7 +96,10 @@ class SignupHandler(webapp2.RequestHandler):
 	def post(self):
 		global error
 		template = JINJA_ENVIRONMENT.get_template('signup-page.html')
+		
+#   ########PASSWORD TO MAKE AN INSTRUCTOR USER####################
 		IPASS = "MasterMind"
+#   ###############################################################
 		isInstructor = False
 		
 		# check to see if at least one class is selected
@@ -195,16 +211,17 @@ class LoginHandler(webapp2.RequestHandler):
 			question_class = self.request.get("new-entry")
 			
 			if self.request.get("question") and self.request.get("answer"):
-				question = self.request.get("question")
-				Q = Questions.query(Questions.question == question)
+				q_id = self.request.get("question")
+				Q = Questions.query(Questions.id == int(q_id))
 				q = Q.get()
-				addedQuestion = q.question
 				q.answer = self.request.get("answer")
 				if self.request.get("Add_to_FAQ"):
 					q.inFAQ = True
-					question_class = "has been answered and added to class FAQ"
-				q.put()
-				question_class = "has been answered"
+					addedQuestion = "The question has been answered and added to the FAQ"
+					q.put()
+				else:
+					addedQuestion = "The question has been answered"
+					q.put()
 				self.redirect('/login')
 			
 		
@@ -213,11 +230,15 @@ class LoginHandler(webapp2.RequestHandler):
 			question_class = self.request.get("add-new-question")
 			
 			if self.request.get("new-question"):
-				Q = Questions(question = newQ, classQ = question_class, answer = "")
+			#	Qcount is incremented to the next questions ID number and then the question is added.
+				global Qcount
+				Qcount += 1
+				Q = Questions(question = newQ, classQ = question_class, answer = "", id = Qcount)
 				Q.put()
 				addedQuestion = "You're question has been added to the list of questions for "
 				return self.redirect('/login')
-				
+			
+			# Error prompt when the form is hit with a blank question text field.
 			else:
 				addedQuestion = "You have to ask a question for someone to be able to answer it!"
 				question_class = ""
@@ -231,8 +252,22 @@ class FAQHandler(webapp2.RequestHandler):
 											'user':u}))
 											
 	def post(self):
-		global question_class
+		global question_class, error
+		error = ""
 		question_class = self.request.get("class")
+		self.redirect('/FAQ')
+		
+#	Only called to delete questions from the FAQ
+class Delete(webapp2.RequestHandler):
+	def get(self):
+		self.redirect('/FAQ')
+	def post(self):
+		global error
+		FAQ_questions = Questions.query(Questions.inFAQ == True, Questions.classQ == question_class).fetch()
+		for q in FAQ_questions:
+			if self.request.get(str(q.id)):
+				q.inFAQ = False
+				q.put()
 		self.redirect('/FAQ')
 
 			
@@ -250,10 +285,12 @@ class ClearHandler(webapp2.RequestHandler):
 		self.redirect('/signup')
 		
 app = webapp2.WSGIApplication([
-    ('/', MainHandler),
+	('/', StartupHandler),
+	('/home', MainHandler),
 	('/signup', SignupHandler),
 	('/success', SuccessHandler),
 	('/login', LoginHandler),
 	('/FAQ', FAQHandler),
+	('/delete', Delete),
 	('/clear', ClearHandler)
 ], debug=True)
