@@ -82,9 +82,10 @@
 {% if user.isInstructor == True %}
 	<div class="faq-items">
 		<ul>
+		<form method = 'post' action = '/delete'>
 		{% for q in questions %}
 		<li class = "question">
-		<h2 class = "heading"> Question:</h2>
+		 <h2 class = "heading"><input type = 'checkbox' name = '{{q.id}}'> Question:</h2>
 			{{q.question}}
 			<div class = "answer">
 			<h2 class = "heading"> Answer: </h2>
@@ -92,20 +93,8 @@
 			</div>
 			</li><br><br>
 		{% endfor %}
+		<input type = 'submit' id = 'delete' value = 'Delete selected questions from FAQ'>
+		</form>
 {% endif %}
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
 		
 		
