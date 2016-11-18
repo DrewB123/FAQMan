@@ -116,12 +116,13 @@
 		<h4>Pending Questions</h4>
 			{%for i in range(0, classes) %}
 			<div>
-				<h4>{{user.classes[i]}}</h4>
+				<details><summary>{{user.classes[i]}}</summary>
 					{% for q in questions %}
 						{% if q.classQ==user.classes[i] and q.answer == "" %}
 							<p> <br>{{q.question}}<input type = "radio" name = "question" value = "{{q.id|string}}"></p>
 						{% endif %}
 					{% endfor %}
+				</details>
 			</div>
 			{% endfor %}
 			</form>
