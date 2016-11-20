@@ -39,8 +39,7 @@ class User(ndb.Model):
 	#get list of classes by calling user.classes
 	classes = ndb.StringProperty(repeated=True)
 	isInstructor = ndb.BooleanProperty()
-
-u = User()
+	
 question_class = ""
 addedQuestion = ""
 error = ""
@@ -80,7 +79,6 @@ class MainHandler(webapp2.RequestHandler):
 			return self.redirect('/home')
 		
 		else:
-			global u
 			u = user.get()
 			#checks to see if the password is correct
 			if u.password == pw:
@@ -169,11 +167,15 @@ class SignupHandler(webapp2.RequestHandler):
 
 class goHome(webapp2.RequestHandler):
 	def get(self):
+		if self.request.cookies.get('uname'):
+			self.response.delete_cookie('uname')
 		global error
 		error = ""
 		self.redirect('/home')
 	
 	def post(self):
+		if self.request.cookies.get('uname'):
+			self.response.delete_cookie('uname')
 		global error
 		error = ""
 		self.redirect('/home')
