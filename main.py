@@ -39,7 +39,8 @@ class User(ndb.Model):
 	#get list of classes by calling user.classes
 	classes = ndb.StringProperty(repeated=True)
 	isInstructor = ndb.BooleanProperty()
-	
+
+u = User()
 question_class = ""
 addedQuestion = ""
 error = ""
@@ -57,7 +58,8 @@ class StartupHandler(webapp2.RequestHandler):
 	
 	def post(self):
 		self.redirect('/home')
-
+		
+# ##############################################################################################################################################		
 class MainHandler(webapp2.RequestHandler):
 	
 	def get(self):
@@ -79,6 +81,7 @@ class MainHandler(webapp2.RequestHandler):
 			return self.redirect('/home')
 		
 		else:
+			global u
 			u = user.get()
 			#checks to see if the password is correct
 			if u.password == pw:
@@ -89,6 +92,7 @@ class MainHandler(webapp2.RequestHandler):
 				error = "Incorrect password!"
 				return self.redirect('/home')
 
+# ##############################################################################################################################################		
 class SignupHandler(webapp2.RequestHandler):
 	def get(self):
 		template = JINJA_ENVIRONMENT.get_template('signup-page.html')
@@ -165,6 +169,10 @@ class SignupHandler(webapp2.RequestHandler):
 			error = "Please fill in every text box and select at least one class."
 			return self.redirect('/signup')
 
+
+# ##############################################################################################################################################
+#	This of for links to the home page
+#	if there is a current user it removes them
 class goHome(webapp2.RequestHandler):
 	def get(self):
 		if self.request.cookies.get('uname'):
@@ -174,20 +182,25 @@ class goHome(webapp2.RequestHandler):
 		self.redirect('/home')
 	
 	def post(self):
+		global error
 		if self.request.cookies.get('uname'):
 			self.response.delete_cookie('uname')
-		global error
 		error = ""
 		self.redirect('/home')
 		
 		
+# ##############################################################################################################################################		
+#	After a user is successfully created from the sign up page
 class SuccessHandler(webapp2.RequestHandler):
 	def get(self):
 		global error
 		error = ""
 		template = JINJA_ENVIRONMENT.get_template('success.html')
 		self.response.write(template.render())
-
+		
+		
+# ##############################################################################################################################################		
+#	login page
 class LoginHandler(webapp2.RequestHandler):
 	def get(self):
 		if self.request.cookies.get('uname'):
@@ -211,6 +224,7 @@ class LoginHandler(webapp2.RequestHandler):
 	def post(self):   
 		self.redirect('/login')
 			
+# ###########################################################################################################################################		
 #	This is where changing user passwords happens			
 class changePassword(webapp2.RequestHandler):
 	def get(self):
@@ -240,7 +254,8 @@ class changePassword(webapp2.RequestHandler):
 			addedQuestion = ""
 			question_class = ""
 			self.redirect('/login')
-			
+	
+# ##############################################################################################################################################		
 #	This is where adding a question to the datastore gets done
 class addQ(webapp2.RequestHandler):
 	def get(self):
@@ -266,7 +281,9 @@ class addQ(webapp2.RequestHandler):
 			addedQuestion = "You have to ask a question for someone to be able to answer it!"
 			question_class = ""
 			return self.redirect('/login')
-			
+
+# ##############################################################################################################################################		
+#	Questions get answered in this class
 class answerQ(webapp2.RequestHandler):
 	def get(self):
 		global addedQuestion, question_class
@@ -292,6 +309,8 @@ class answerQ(webapp2.RequestHandler):
 				q.put()
 			self.redirect('/login')
 			
+# ##############################################################################################################################################		
+#	view the correct questions on the login page			
 class viewQuestions(webapp2.RequestHandler):
 	def get(self):
 		self.redirect('/login')
@@ -303,7 +322,9 @@ class viewQuestions(webapp2.RequestHandler):
 		classClicked = list(classClicked.keys())
 		classClicked = classClicked[0]   
 		self.redirect('/login')
-			
+
+# ##############################################################################################################################################		
+#	view FAQ
 class FAQHandler(webapp2.RequestHandler):
 	def get(self):
 		usr = self.request.cookies.get('uname')
@@ -318,8 +339,9 @@ class FAQHandler(webapp2.RequestHandler):
 		global question_class
 		question_class = self.request.get("FAQclass")
 		self.redirect('/FAQ')
-		
-#	Only called to delete questions from the FAQ
+	
+# ##############################################################################################################################################			
+#	Delete questions from the FAQ
 class Delete(webapp2.RequestHandler):
 	def get(self):
 		self.redirect('/FAQ')
@@ -332,7 +354,7 @@ class Delete(webapp2.RequestHandler):
 				q.put()
 		self.redirect('/FAQ')
 
-			
+# ##############################################################################################################################################
 class ClearHandler(webapp2.RequestHandler):
 	def get(self):
 		#deleting all users
@@ -345,10 +367,11 @@ class ClearHandler(webapp2.RequestHandler):
 		for q in questions:
 			q.key.delete()
 		self.redirect('/signup')
-		
+# ##############################################################################################################################################		
+
 app = webapp2.WSGIApplication([
 	('/', StartupHandler),
-	('/home', MainHandler),
+    ('/home', MainHandler),
 	('/signup', SignupHandler),
 	('/success', SuccessHandler),
 	('/login', LoginHandler),
