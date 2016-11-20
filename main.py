@@ -371,7 +371,7 @@ class ClearHandler(webapp2.RequestHandler):
 
 app = webapp2.WSGIApplication([
 	('/', StartupHandler),
-    ('/home', MainHandler),
+  	('/home', MainHandler),
 	('/signup', SignupHandler),
 	('/success', SuccessHandler),
 	('/login', LoginHandler),
@@ -381,5 +381,6 @@ app = webapp2.WSGIApplication([
 	('/delete', Delete),
 	('/goHome', goHome),
 	('/viewQ', viewQuestions),
+	('/password', changePassword),
 	('/clear', ClearHandler)
 ], debug=True)
