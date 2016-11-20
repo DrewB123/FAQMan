@@ -44,38 +44,36 @@
 			height: 50px; 
 			width: 100%; 
 			}
-		.head{
-			font-style:normal;
-			color:black;
-		}
-		#question{
-			font-weight: 900;
-			font-style: italic;
-			width:500px;
-		}
-		
-		#answer{
-			color : #F96E5B;
-			width:500px;
+		#content { border-style: dashed;
+					border-width: 1px;
+					float: right;
+					width: 500px;
+					margin-top: 100px;
+					padding: 25px 25px 25px 25px;}	
+		#main { float: left;
 		}
 		
-		#allQ{
-			position:absolute;
-			top: 75px;
-			left: 600px;
-		}
-			
+details {border: 1px solid #E1E1E1; border-radius: 5px; box-shadow: 0 1px 4px rgba(0, 0, 0, .4); color: #363636; margin: 0 0 .4em; padding: 1%;}
+details[open] {background: #E1E1E1;}
+summary {background: -webkit-linear-gradient(top, #FAFAFA 50%, #E1E1E1 50%); border-radius: 5px; cursor: pointer; font-size: .8em; font-weight: bold; margin: -1%; padding: 8px 0; position: relative; width: 102%;}
+summary:hover, details[open] summary {background: #E1E1E1;}
+summary::-webkit-details-marker {display: none}
+summary:before{border-radius: 5px; content: "+"; color: #363636; display: block; float: left; font-size: 1.5em; font-weight: bold; margin: -2px 10px 0 10px; padding: 0; text-align: center; width: 20px;}
+details[open] summary:before {content: "-"; margin-top: -4px;}
+
 	</style>
 </head>
 
 <body>
 
+
+	
 	<div id="THEBLUEONE"></div>
+	<div id="main">
 	<div class="Details_Container" style="padding: 25px;">
 	
 		
 		<h2><img id="logo" src="http://i.imgur.com/tYSNXFo.png" />Hey {{user.Fname}} {{user.Lname}}. Welcome to your Student Account Page.</h2>
-
 		<details>
 			<summary>{{user.Fname}} 's Account</summary>
 			<ul>
@@ -83,7 +81,7 @@
 				<li>Email Address: {{user.email}} </li>
 			</ul>
 
-	<form method="post" action="/login">
+	<form method="post" action="/password">
 			<h2>Change Password</h2>
 			Old Password:<br>
 			<input type="password" name="oldpassword">
@@ -94,42 +92,32 @@
 			<br><br>
 			<input type="submit">
 		</details>
-	</div>
-	</form>
-
-	<div class="Classes_Container" style="padding: 25px;">
-
-		<h3>FAQs for {{user.Fname}}'s Classes</h3>
-
-		<form method="post" action = "/FAQ">
-		{% for i in range(0, classes) %}
-			{{user.classes[i]}}</summary>
-				<input type = "radio" name = "class" value = "{{user.classes[i]}}"> <br>			
-		{% endfor %}
-		<input type = "submit" id = "bFAQ" class = "buttons" value = "Go to selected FAQ">
 		</form>
-					<form id = 'allQ'>
-					{% for i in range(0, classes) %}
-						<details><summary>Questions for {{user.classes[i]}}</summary>
-							<ul id = 'question'>
-								{% for q in questions %}
-									{% if q.classQ == user.classes[i] %}
-										<li><b class = 'head'>Question: </b> {{q.question}}</li>
-										{% if q.answer != "" %}
-										<ul>
-										<li><p id = 'answer'><b class = 'head'>Answer: </b> {{q.answer}}</li>
-										</ul>
-										{% endif %}
-										<br>
-									{% endif %}
-								{% endfor %}
-						</details>
-							</ul>
-					{% endfor %}
-					</form>
-
+	</div>
+	<div id="class_list">
+	<h3> Select from Class list to view Questions </h3>
+	
+	<form method="post" action="/viewQ" >
+		{% for class in user.classes %}
+			<input type="submit" name="{{class}}" value="{{class}}" id="question-submit" />
+			<br />
+		{% endfor %}
+	</form>
+	
+	</div>
+	<div class="Classes_Container" style="padding: 25px;">
+	<form method="post" action="/FAQ">
+		<h3>FAQs for {{user.Fname}}'s Classes</h3>
+		<select name="FAQclass" id="FAQclass">
+		{% for i in range(0, classes) %}
+			<option value="{{user.classes[i]}}">{{user.classes[i]}}</option>
+		{% endfor %}
+		</select>
+		<input type="submit" value="Go to FAQ" id="question-submit">
+	</form>
+	</div>
 		<div>
-		<form method = "post" action = "/login">
+		<form method="post" action="/addQ">
 			<h4>Submit a new question for: </h4>
 			<select name="add-new-question">
 				{% for i in range(0, classes) %}
@@ -143,7 +131,28 @@
 			<button type="submit" id="question-submit">Submit your question.</button>
 			<h4>{{added}}{{question_class}}</h4>
 			<a href='/goHome'> Sign out </a>
-		</form>
 		</div>
-
+	</form>
+	</div>
+	{% if classClicked == "" %}
+		<h2>Select a Class</h2>
+	{% else %}
+		<h2>Questions for class {{classClicked}}</h2>
+	{% endif %}
+	
+	<div id="content">
+	{% for q in questions %}
+		{% if q.classQ == classClicked %}
+			<details style="margin-top: 20px;">	
+			{% if q.answer == "" %}
+				<summary>{{q.question}} <span style="color: red;">Unanswered</span></summary>
+			{% else %}
+				<summary>{{q.question}}</summary>
+				{{ q.answer }}
+			{% endif %}
+			</details>
+		{% endif %}
+	{% endfor %}
+	</div>
+	
 </html>
