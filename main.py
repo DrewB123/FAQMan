@@ -44,6 +44,7 @@ u = User()
 question_class = ""
 addedQuestion = ""
 error = ""
+classClicked = ""
 Qcount = 0
 
 
@@ -59,6 +60,7 @@ class StartupHandler(webapp2.RequestHandler):
 		self.redirect('/home')
 
 class MainHandler(webapp2.RequestHandler):
+	
 	def get(self):
 		global question_class, addedQuestion, error
 		question_class = ""
@@ -83,6 +85,7 @@ class MainHandler(webapp2.RequestHandler):
 			#checks to see if the password is correct
 			if u.password == pw:
 				error = ""
+				self.response.set_cookie('uname', u.email, path='/')
 				return self.redirect('/login')
 			else:
 				error = "Incorrect password!"
@@ -178,93 +181,140 @@ class goHome(webapp2.RequestHandler):
 		
 class SuccessHandler(webapp2.RequestHandler):
 	def get(self):
+		global error
+		error = ""
 		template = JINJA_ENVIRONMENT.get_template('success.html')
 		self.response.write(template.render())
 
 class LoginHandler(webapp2.RequestHandler):
 	def get(self):
-		questions = Questions.query().fetch()
-		numClasses = len(u.classes)
-		if u.isInstructor == True:
-			template = JINJA_ENVIRONMENT.get_template('Faculty_landing.html')
-			self.response.write(template.render({'user':u, 'classes':numClasses, 'questions':questions, 'added':addedQuestion,
-												'question_class':question_class}))
-			
+		if self.request.cookies.get('uname'):
+			usr = self.request.cookies.get('uname')
+			usr = User.query(User.email==usr).fetch()
+			usr = usr[0]
+			questions = Questions.query().fetch()
+			numClasses = len(u.classes)
+			if u.isInstructor == True:
+				template = JINJA_ENVIRONMENT.get_template('Faculty_landing.html')
+				self.response.write(template.render({'user':u, 'classes':numClasses, 'questions':questions, 'added':addedQuestion,
+													'question_class':question_class}))
+				
+			else:
+				template = JINJA_ENVIRONMENT.get_template('student_landing.html')
+				self.response.write(template.render({'classClicked':classClicked, 'user':u, 'classes':numClasses, 'questions':questions, 
+													'added':addedQuestion, 'question_class':question_class}))
 		else:
-			template = JINJA_ENVIRONMENT.get_template('student_landing.html')
-			self.response.write(template.render({'user':u, 'classes':numClasses, 'questions':questions, 'added':addedQuestion,
-												'question_class':question_class}))
+			self.redirect('/home')
+	
+	def post(self):   
+		self.redirect('/login')
+			
+#	This is where changing user passwords happens			
+class changePassword(webapp2.RequestHandler):
+	def get(self):
+		addedQuestion = ""
+		question_class = ""
+		self.redirect('/login')
 	
 	def post(self):
 		global question_class, addedQuestion
-		questions = Questions.query().fetch()
-		
 		if self.request.get("oldpassword") and self.request.get("newpassword") and self.request.get("confirmnewpassword"):
-				
-				if self.request.get("oldpassword") != u.password:
-					addedQuestion = "Incorrect old password input!"
-					question_class = ""
-					return self.redirect('/login')
-					
-				elif self.request.get("newpassword") == self.request.get("confirmnewpassword"):
-					u.password = self.request.get("newpassword")
-					u.put()
-					addedQuestion = "Your password has been changed!"
-					question_class = ""
-					return self.redirect('/login')
-				else:
-					addedQuestion = "New passwords don't match "
-					question_class = ""
-					return self.redirect('/login')
-		
-		elif u.isInstructor == True:
-			question_class = self.request.get("new-entry")
-			
-			if self.request.get("question") and self.request.get("answer"):
-				q_id = self.request.get("question")
-				Q = Questions.query(Questions.id == int(q_id))
-				q = Q.get()
-				q.answer = self.request.get("answer")
-				if self.request.get("Add_to_FAQ"):
-					q.inFAQ = True
-					addedQuestion = "The question has been answered and added to the FAQ"
-					q.put()
-				else:
-					addedQuestion = "The question has been answered"
-					q.put()
-				self.redirect('/login')
-			
-		
-		else:
-			newQ = self.request.get("new-question")
-			question_class = self.request.get("add-new-question")
-			
-			if self.request.get("new-question"):
-			#	Qcount is incremented to the next questions ID number and then the question is added.
-				global Qcount
-				Qcount += 1
-				Q = Questions(question = newQ, classQ = question_class, answer = "", id = Qcount)
-				Q.put()
-				addedQuestion = "You're question has been added to the list of questions for "
-				return self.redirect('/login')
-			
-			# Error prompt when the form is hit with a blank question text field.
-			else:
-				addedQuestion = "You have to ask a question for someone to be able to answer it!"
+			if self.request.get("oldpassword") != u.password:
+				addedQuestion = "Incorrect old password input!"
 				question_class = ""
 				return self.redirect('/login')
+											
+			elif self.request.get("newpassword") == self.request.get("confirmnewpassword"):
+				u.password = self.request.get("newpassword")
+				u.put()
+				addedQuestion = "Your password has been changed!"
+				question_class = ""
+				return self.redirect('/login')
+			else:
+				addedQuestion = "New passwords don't match "
+				question_class = ""
+				return self.redirect('/login')
+		else:
+			addedQuestion = ""
+			question_class = ""
+			self.redirect('/login')
+			
+#	This is where adding a question to the datastore gets done
+class addQ(webapp2.RequestHandler):
+	def get(self):
+		global addedQuestion, question_class
+		addedQuestion = ""
+		question_class = ""
+		self.redirect('/login')
+	
+	def post(self):
+		global question_class, addedQuestion
+		newQ = self.request.get("new-question")
+		question_class = self.request.get("add-new-question")
+                        
+		if self.request.get("new-question"):
+			global Qcount
+			Qcount += 1
+			Q = Questions(question = newQ, classQ = question_class, answer = "", id = Qcount)
+			Q.put()
+			addedQuestion = "You're question has been added to the list of questions for "
+			return self.redirect('/login')
+                                
+		else:
+			addedQuestion = "You have to ask a question for someone to be able to answer it!"
+			question_class = ""
+			return self.redirect('/login')
+			
+class answerQ(webapp2.RequestHandler):
+	def get(self):
+		global addedQuestion, question_class
+		addedQuestion = ""
+		question_class = ""
+		self.redirect('/login')
+	
+	def post(self):
+		global addedQuestion, question_class
+		question_class = self.request.get("new-entry")
+		
+		if self.request.get("question") and self.request.get("answer"):
+			q_id = self.request.get("question")
+			Q = Questions.query(Questions.id == int(q_id))
+			q = Q.get()
+			q.answer = self.request.get("answer")
+			if self.request.get("Add_to_FAQ"):
+				q.inFAQ = True
+				addedQuestion = "The question has been answered and added to the FAQ"
+				q.put()
+			else:
+				addedQuestion = "The question has been answered"
+				q.put()
+			self.redirect('/login')
+			
+class viewQuestions(webapp2.RequestHandler):
+	def get(self):
+		self.redirect('/login')
+	
+	def post(self):
+		global classClicked
+		questions = Questions.query().fetch()
+		classClicked = self.request.POST
+		classClicked = list(classClicked.keys())
+		classClicked = classClicked[0]   
+		self.redirect('/login')
 			
 class FAQHandler(webapp2.RequestHandler):
 	def get(self):
+		usr = self.request.cookies.get('uname')
+		usr = User.query(User.email==usr).fetch()
+		usr = usr[0]
 		FAQ_questions = Questions.query(Questions.inFAQ == True, Questions.classQ == question_class).fetch()
 		template = JINJA_ENVIRONMENT.get_template('FAQ.html')
 		self.response.write(template.render({'questions':FAQ_questions, 'class':question_class,
-											'user':u}))
+											'user':usr}))
 											
 	def post(self):
-		global question_class, error
-		error = ""
-		question_class = self.request.get("class")
+		global question_class
+		question_class = self.request.get("FAQclass")
 		self.redirect('/FAQ')
 		
 #	Only called to delete questions from the FAQ
@@ -300,8 +350,11 @@ app = webapp2.WSGIApplication([
 	('/signup', SignupHandler),
 	('/success', SuccessHandler),
 	('/login', LoginHandler),
-	('/goHome', goHome),
+	('/answerQ', answerQ),
+	('/addQ', addQ),
 	('/FAQ', FAQHandler),
 	('/delete', Delete),
+	('/goHome', goHome),
+	('/viewQ', viewQuestions),
 	('/clear', ClearHandler)
 ], debug=True)
