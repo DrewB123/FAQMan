@@ -78,9 +78,8 @@ class MainHandlerTests(unittest.TestCase):
 		# steve holt
 	
 	# Mocked test: verify that the post() redirect works when an error happens.
-	# Difficulties: (1) cannot test whether the variable 'error' is something. 
 	@patch.object(webapp2.RequestHandler, 'redirect')
-	def testMainHandlerPost(self, mock): 
+	def testMainHandlerPostEmailError(self, mock): 
 		# Arrange: If there's not exactly one user, an error occurs. 
 		# POST is a dictionary; it adds this data to a request object...or something. I think this is unnecessary.
 		test_request = webapp2.Request.blank('/', POST={"user_email": "fake_user@email.com", "pass_word" : "FAKEPASSWORD"})
@@ -90,9 +89,49 @@ class MainHandlerTests(unittest.TestCase):
 		# Act: Give the request to the app. 
 		response = test_request.get_response(main.app)
 
-		# Assert: inspect the response
+		# Assert: Inspect the response
 		mock.assert_called_with('/')
 		self.assertEqual(main.error, "Invalid email!")
+	
+	# Mocked test: Test the "incorrect password" error handling.
+	@patch.object(webapp2.RequestHandler, 'redirect')
+	def testMainHandlerPostPWError(self, mock): 
+		# Arrange: Put a User in the datastore stub; POST the wrong password.
+		test_User = User()
+		test_User.email = "fake_user@email.com"
+		test_User.password = "PASSWORD"
+		test_User.put()
+		test_request = webapp2.Request.blank('/', POST={"user_email" : "fake_user@email.com", "pass_word" : "WRONGPASSWORD"})
+		test_request.method = 'POST'
+		mock.return_value = None
+
+		# Act: Give the request to the app.
+		response = test_request.get_response(main.app)
+
+		# Assert: Inspect the response. 
+		mock.assert_called_with('/')
+		self.assertEqual(main.error, "Incorrect password!")
+	
+	# Mocked test: Login
+	@patch.object(webapp2.RequestHandler, 'redirect')
+	def testMainHandlerPostLogin(self, mock): 
+		# Arrange: Put a User in the datastore stub; POST the correct password. 
+		test_User = User()
+		test_User.email = "fake_user@email.com"
+		test_User.password = "PASSWORD"
+		test_User.put()
+		test_request = webapp2.Request.blank('/', POST={"user_email" : "fake_user@email.com", "pass_word" : "PASSWORD"})
+		test_request.method = 'POST'
+		mock.return_value = None
+
+		# Act: Give the request to the app.
+		response = test_request.get_response(main.app)
+
+		# Assert: Inspect the response. 
+		# The "error" should be blank. 
+		mock.assert_called_with('/login')
+		self.assertEqual(main.error, "")
+
 
 
 
