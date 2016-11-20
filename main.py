@@ -163,7 +163,17 @@ class SignupHandler(webapp2.RequestHandler):
 		else:
 			error = "Please fill in every text box and select at least one class."
 			return self.redirect('/signup')
-		
+
+class goHome(webapp2.RequestHandler):
+	def get(self):
+		global error
+		error = ""
+		self.redirect('/home')
+	
+	def post(self):
+		global error
+		error = ""
+		self.redirect('/home')
 		
 		
 class SuccessHandler(webapp2.RequestHandler):
@@ -290,6 +300,7 @@ app = webapp2.WSGIApplication([
 	('/signup', SignupHandler),
 	('/success', SuccessHandler),
 	('/login', LoginHandler),
+	('/goHome', goHome),
 	('/FAQ', FAQHandler),
 	('/delete', Delete),
 	('/clear', ClearHandler)
