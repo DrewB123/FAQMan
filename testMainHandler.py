@@ -38,7 +38,7 @@ class MainHandlerTests(unittest.TestCase):
 	# Test MainHandler get() delivers the correct html pages. 
 	def testMainHandlerget(self): 
 		# Make a fake web request using the path to simulate user. 
-		request = webapp2.Request.blank('/')
+		request = webapp2.Request.blank('/home')
 		# Retrieve the response. This simulates what would happen if a user 
 		# tried to access the homepage. 
 		response = request.get_response(main.app)
@@ -70,7 +70,7 @@ class MainHandlerTests(unittest.TestCase):
 	# The patched function is called 'mock' in this context.
 	def testMainHandlerGetMocked(self, mock): 
 		# Arrange: Make a fake web request that will be routed to MainHandler's get().
-		request = webapp2.Request.blank('/')
+		request = webapp2.Request.blank('/home')
 		# Act: Give the request to the app. 
 		response = request.get_response(main.app)
 		# Assert
@@ -82,7 +82,7 @@ class MainHandlerTests(unittest.TestCase):
 	def testMainHandlerPostEmailError(self, mock): 
 		# Arrange: If there's not exactly one user, an error occurs. 
 		# POST is a dictionary; it adds this data to a request object...or something. I think this is unnecessary.
-		test_request = webapp2.Request.blank('/', POST={"user_email": "fake_user@email.com", "pass_word" : "FAKEPASSWORD"})
+		test_request = webapp2.Request.blank('/home', POST={"user_email": "fake_user@email.com", "pass_word" : "FAKEPASSWORD"})
 		test_request.method = 'POST'
 		# I have no idea why this line is necessary. 
 		mock.return_value = None
@@ -90,7 +90,7 @@ class MainHandlerTests(unittest.TestCase):
 		response = test_request.get_response(main.app)
 
 		# Assert: Inspect the response
-		mock.assert_called_with('/')
+		mock.assert_called_with('/home')
 		self.assertEqual(main.error, "Invalid email!")
 	
 	# Mocked test: Test the "incorrect password" error handling.
@@ -101,7 +101,7 @@ class MainHandlerTests(unittest.TestCase):
 		test_User.email = "fake_user@email.com"
 		test_User.password = "PASSWORD"
 		test_User.put()
-		test_request = webapp2.Request.blank('/', POST={"user_email" : "fake_user@email.com", "pass_word" : "WRONGPASSWORD"})
+		test_request = webapp2.Request.blank('/home', POST={"user_email" : "fake_user@email.com", "pass_word" : "WRONGPASSWORD"})
 		test_request.method = 'POST'
 		mock.return_value = None
 
@@ -109,7 +109,7 @@ class MainHandlerTests(unittest.TestCase):
 		response = test_request.get_response(main.app)
 
 		# Assert: Inspect the response. 
-		mock.assert_called_with('/')
+		mock.assert_called_with('/home')
 		self.assertEqual(main.error, "Incorrect password!")
 	
 	# Mocked test: Login
@@ -120,7 +120,7 @@ class MainHandlerTests(unittest.TestCase):
 		test_User.email = "fake_user@email.com"
 		test_User.password = "PASSWORD"
 		test_User.put()
-		test_request = webapp2.Request.blank('/', POST={"user_email" : "fake_user@email.com", "pass_word" : "PASSWORD"})
+		test_request = webapp2.Request.blank('/home', POST={"user_email" : "fake_user@email.com", "pass_word" : "PASSWORD"})
 		test_request.method = 'POST'
 		mock.return_value = None
 
