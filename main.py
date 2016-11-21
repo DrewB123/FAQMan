@@ -327,13 +327,16 @@ class viewQuestions(webapp2.RequestHandler):
 #	view FAQ
 class FAQHandler(webapp2.RequestHandler):
 	def get(self):
-		usr = self.request.cookies.get('uname')
-		usr = User.query(User.email==usr).fetch()
-		usr = usr[0]
-		FAQ_questions = Questions.query(Questions.inFAQ == True, Questions.classQ == question_class).fetch()
-		template = JINJA_ENVIRONMENT.get_template('FAQ.html')
-		self.response.write(template.render({'questions':FAQ_questions, 'class':question_class,
-											'user':usr}))
+		if self.request.cookies.get('uname'):
+			usr = self.request.cookies.get('uname')
+			usr = User.query(User.email==usr).fetch()
+			usr = usr[0]
+			FAQ_questions = Questions.query(Questions.inFAQ == True, Questions.classQ == question_class).fetch()
+			template = JINJA_ENVIRONMENT.get_template('FAQ.html')
+			self.response.write(template.render({'questions':FAQ_questions, 'class':question_class,
+												'user':usr}))
+		else:
+			self.redirect('/home')
 											
 	def post(self):
 		global question_class
