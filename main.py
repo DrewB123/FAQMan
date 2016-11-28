@@ -18,6 +18,7 @@ import webapp2
 import urllib
 import jinja2
 import os
+import time
 from google.appengine.ext import ndb
 
 JINJA_ENVIRONMENT = jinja2.Environment(loader = jinja2.FileSystemLoader(os.path.dirname(__file__)))
@@ -274,6 +275,7 @@ class addQ(webapp2.RequestHandler):
 			Qcount += 1
 			Q = Questions(question = newQ, classQ = question_class, answer = "", id = Qcount)
 			Q.put()
+			time.sleep(0.5)
 			addedQuestion = "You're question has been added to the list of questions for "
 			return self.redirect('/login')
                                 
@@ -307,6 +309,7 @@ class answerQ(webapp2.RequestHandler):
 			else:
 				addedQuestion = "The question has been answered"
 				q.put()
+			time.sleep(0.1)
 			self.redirect('/login')
 			
 # ##############################################################################################################################################		
@@ -355,6 +358,7 @@ class Delete(webapp2.RequestHandler):
 			if self.request.get(str(q.id)):
 				q.inFAQ = False
 				q.put()
+				time.sleep(0.1)
 		self.redirect('/FAQ')
 
 # ##############################################################################################################################################
