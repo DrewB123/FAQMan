@@ -29,7 +29,13 @@ class Questions(ndb.Model):
 	classQ = ndb.StringProperty()
 	inFAQ = ndb.BooleanProperty()
 	id = ndb.IntegerProperty()
+	asker = ndb.StringProperty()
 	
+class Course(ndb.Model):
+	classlist = ndb.StringProperty(repeated=True)
+	name = ndb.StringProperty()
+	id = ndb.IntegerProperty()
+		
 	
 class User(ndb.Model):
 	Fname = ndb.StringProperty()
@@ -41,7 +47,6 @@ class User(ndb.Model):
 	classes = ndb.StringProperty(repeated=True)
 	isInstructor = ndb.BooleanProperty()
 
-u = User()
 question_class = ""
 addedQuestion = ""
 error = ""
@@ -82,7 +87,7 @@ class MainHandler(webapp2.RequestHandler):
 			return self.redirect('/home')
 		
 		else:
-			global u
+			u = User()
 			u = user.get()
 			#checks to see if the password is correct
 			if u.password == pw:
@@ -209,15 +214,15 @@ class LoginHandler(webapp2.RequestHandler):
 			usr = User.query(User.email==usr).fetch()
 			usr = usr[0]
 			questions = Questions.query().fetch()
-			numClasses = len(u.classes)
-			if u.isInstructor == True:
+			numClasses = len(usr.classes)
+			if usr.isInstructor == True:
 				template = JINJA_ENVIRONMENT.get_template('Faculty_landing.html')
-				self.response.write(template.render({'user':u, 'classes':numClasses, 'questions':questions, 'added':addedQuestion,
+				self.response.write(template.render({'user':usr, 'classes':numClasses, 'questions':questions, 'added':addedQuestion,
 													'question_class':question_class}))
 				
 			else:
 				template = JINJA_ENVIRONMENT.get_template('student_landing.html')
-				self.response.write(template.render({'classClicked':classClicked, 'user':u, 'classes':numClasses, 'questions':questions, 
+				self.response.write(template.render({'classClicked':classClicked, 'user':usr, 'classes':numClasses, 'questions':questions, 
 													'added':addedQuestion, 'question_class':question_class}))
 		else:
 			self.redirect('/home')
@@ -273,9 +278,9 @@ class addQ(webapp2.RequestHandler):
 		if self.request.get("new-question"):
 			global Qcount
 			Qcount += 1
-			Q = Questions(question = newQ, classQ = question_class, answer = "", id = Qcount)
+			Q = Questions(question = newQ, classQ = question_class, answer = "", id = Qcount, asker = self.request.cookies.get('uname') )
 			Q.put()
-			time.sleep(0.5)
+			time.sleep(0.1)
 			addedQuestion = "You're question has been added to the list of questions for "
 			return self.redirect('/login')
                                 
@@ -378,7 +383,7 @@ class ClearHandler(webapp2.RequestHandler):
 
 app = webapp2.WSGIApplication([
 	('/', StartupHandler),
-  	('/home', MainHandler),
+   	('/home', MainHandler),
 	('/signup', SignupHandler),
 	('/success', SuccessHandler),
 	('/login', LoginHandler),
