@@ -59,7 +59,7 @@ Qcount = 0
 # and go to the home page.
 class StartupHandler(webapp2.RequestHandler):
 	def get(self):
-		global Qcount
+		global Qcount, Ccount
 		Qcount = Questions.query().count()
 		self.redirect('/home')
 	
