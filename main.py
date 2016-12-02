@@ -80,7 +80,7 @@ class MainHandler(webapp2.RequestHandler):
 		template = JINJA_ENVIRONMENT.get_template('home-page.html')
 		global error
 		login = self.request.get("user_email")
-		
+		pw = self.request.get("pass_word")
 # ##############CHECK FOR ADMIN###############################################################
 		if login == "admin":
 			if password == "BATMAN":
@@ -88,7 +88,6 @@ class MainHandler(webapp2.RequestHandler):
 # ############################################################################################
 
 		else:
-			pw = self.request.get("pass_word")
 			user = User.query(User.email == login)
 		
 			if user.count() != 1:
