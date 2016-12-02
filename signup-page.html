@@ -41,6 +41,7 @@
 		border-radius: 4px 3px 4px / 5px 5px;
 		font-weight: 800; 
 	}
+	
 	#error{
 		color:#F96E5B;
 	}
@@ -72,50 +73,128 @@
 
 	<br> Classes(check all that you're in!):
 	<br>
-	<center>
-		<div class = "containter">
-		<div id ="course-list">
-		<h4 id = "course-name">Anthropology</h4>
-	</center>
-	<input type="checkbox" id = "b1" name="b1" value="ANTHRO101">ANTHRO 101 <br>
-	<input type="checkbox" id = "b2" name="b2" value="ANTHRO102"> ANTHRO 102<br>
-	<input type="checkbox" id = "b3" name="b3" value="ANTHRO250">ANTHRO 250 <br>
-	<input type="checkbox" id = "b4" name="b4" value="ANTHRO351"> ANTHRO 351<br>
-	<br>
-	<center>
-		<div class = "containter">
-		<div id ="course-list">
-		<h4 id = "course-name">Biology</h4>
-	</center>
-	<input type="checkbox" id = "b5" name="b5" value="BIO101">BIO 101 <br>
-	<input type="checkbox" id = "b6" name="b6" value="BIO102">BIO 102<br>
-	<input type="checkbox" id = "b7" name="b7" value="BIO250">BIO 250 <br>
-	<input type="checkbox" id = "b8" name="b8" value="BIO431"> BIO 431<br>
-	<br>
-	<center>
-		<div class = "containter">
-		<div id ="course-list">
-		<h4>Computer Science</h4>
-	</center>
-	<input type="checkbox" id = "b9" name="b9" value="COMPSCI101">COMPSCI 101 <br>
-	<input type="checkbox" id = "b10" name="b10" value="COMPSCI250">COMPSCI 250 <br>
-	<input type="checkbox" id = "b11" name="b11" value="COMPSCI351">COMPSCI 351 <br>
-	<input type="checkbox" id = "b12" name="b12" value="COMPSCI361">COMPSCI 361 <br>
-	<br>
-	<center>
-		<div class = "containter">
-		<div id ="course-list">
-		<h4>Underwater Basket Weaving</h4>
-	</center>
-	<input type="checkbox" id = "b13" name="b13" value="UWBW101">UWBW 101 <br>
-	<input type="checkbox" id = "b14" name="b14" value="UWBW251">UWBW 251 <br>
-	<input type="checkbox" id = "b15" name="b15" value="UWBWULT">UWBW ULTIMATE <br>
- 
-	<center><button id="send-btn" class="button" type="submit">Signup</button></center>
 	
+		{% if anthro|length > 0 %}
+		<center>
+			<div class = "containter">
+			<div id ="course-list">
+			<h4 id = "course-name">Anthropology</h4>
+			</center>
+			{% for c in anthro %}
+				<input type="checkbox" id = "{{c.subject}}" name="{{c.id|string}}" value="{{c.name}}">{{c.name}} <br>
+			{% endfor %}
+			<br><br><br><br>
+		{% endif %}
+
+		
+		{% if bio|length > 0 %}
+		<center>
+			<div class = "containter">
+			<div id ="course-list">
+			<h4 id = "course-name">Biology</h4>
+			</center>
+			{% for c in bio %}
+				<input type="checkbox" id = "{{c.subject}}" name="{{c.id|string}}" value="{{c.name}}">{{c.name}} <br>
+			{% endfor %}
+			<br><br><br><br>
+		{% endif %}
+		
+		{% if cs|length > 0 %}
+		<center>
+			<div class = "containter">
+			<div id ="course-list">
+			<h4 id = "course-name">Computer Science</h4>
+		</center>
+			{% for c in cs %}
+				<input type="checkbox" id = "{{c.subject}}" name="{{c.id|string}}" value="{{c.name}}">{{c.name}} <br>
+			{% endfor %}
+			<br><br><br><br>
+		{% endif %}
+	
+		{% if his|length > 0 %}
+		<center>
+			<div class = "containter">
+			<div id ="course-list">
+			<h4 id = "course-name">History</h4>
+			</center>
+			{% for c in his %}
+				<input type="checkbox" id = "{{c.subject}}" name="{{c.id|string}}" value="{{c.name}}">{{c.name}} <br>
+			{% endfor %}
+			<br><br><br><br>
+		{% endif %}
+	
+	
+	{% if uwbw|length > 0 %}
+		<center>
+			<div class = "containter">
+			<div id ="course-list">
+			<h4 id = "course-name">Underwater Basked Weaving</h4>
+			</center>
+			{% for c in uwbw %}
+				<input type="checkbox" id = "{{c.subject}}" name="{{c.id|string}}" value="{{c.name}}">{{c.name}} <br>
+			{% endfor %}
+			<br><br><br><br>
+		{% endif %}
+
+	
+	
+	{% if math|length > 0 %}
+		<center>
+			<div class = "containter">
+			<div id ="course-list">
+			<h4 id = "course-name">Math</h4>
+			</center>
+			{% for c in math %}
+				<input type="checkbox" id = "{{c.subject}}" name="{{c.id|string}}" value="{{c.name}}">{{c.name}} <br>
+			{% endfor %}
+			<br><br><br><br>
+		{% endif %}
+	
+	
+	{% if eng|length > 0 %}
+		<center>
+			<div class = "containter">
+			<div id ="course-list">
+			<h4 id = "course-name">English</h4>
+			</center>
+			{% for c in eng %}
+				<input type="checkbox" id = "{{c.subject}}" name="{{c.id|string}}" value="{{c.name}}">{{c.name}} <br>
+			{% endfor %}
+			<br><br><br><br>
+		{% endif %}
+	
+	
+	{% if phy|length > 0 %}
+		<center>
+			<div class = "containter">
+			<div id ="course-list">
+			<h4 id = "course-name">Physics</h4>
+			</center>
+			{% for c in phy %}
+				<input type="checkbox" id = "{{c.subject}}" name="{{c.id|string}}" value="{{c.name}}">{{c.name}} <br>
+			{% endfor %}
+			<br><br><br><br>
+		{% endif %}
+	
+	
+	{% if ece|length > 0 %}
+		<center>
+			<div class = "containter">
+			<div id ="course-list">
+			<h4 id = "course-name">Electrical and Computer Engineering</h4>
+			</center>
+			{% for c in ece %}
+				<input type="checkbox" id = "{{c.subject}}" name="{{c.id|string}}" value="{{c.name}}">{{c.name}} <br>
+			{% endfor %}
+			<br><br><br><br>
+		{% endif %}
+	
+	
+	<center><button id="send-btn" class="button" type="submit">Signup</button></center>
+</form>
+
 	<a href='/goHome'> Go home!!!! </a><br><br><br>
 	<a href='/clear'>Clear data</a>
-	</p>
 </body>
 
 </html>
