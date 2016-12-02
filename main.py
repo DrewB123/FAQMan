@@ -399,6 +399,8 @@ class AdminHandler(webapp2.RequestHandler):
 		if self.request.cookies.get('uname'):
 			template = JINJA_ENVIRONMENT.get_template('admin.html')
 			self.response.write(template.render({'added':addedQuestion}))
+		else:
+			self.redirect('/home')
 
 
 # #####################################################################################################################################################
