@@ -188,6 +188,11 @@ class SignupHandler(webapp2.RequestHandler):
 				for i in range(1, Ccount+1):
 					if(self.request.get(str(i))):
 						u.classes.append(self.request.get(str(i)))
+						c = Course.query(Course.id == i)
+						course = c.get()
+						course.classlist.append(u.email)
+						course.put()
+						time.sleep(.1)
 				error = ""
 				u.put()
 				return self.redirect('/success')
@@ -410,13 +415,25 @@ class addClass(webapp2.RequestHandler):
 	def post(self):
 		global Ccount, addedQuestion
 		if self.request.get('num'):
+			classes = Course.query().fetch()
 			Ccount += 1
-			C = Course(subject = self.request.get('subject'), name = (self.request.get('subject') + self.request.get('num')),
-						id = Ccount)
-			C.put()
-			time.sleep(.5)
-			addedQuestion = "Class successfully added to the system"
-			self.redirect('/admin')
+			dup = False
+			name = self.request.get('subject') + self.request.get('num')
+			for c in classes:
+				if c.name == name:
+					dup = True
+					break
+			
+			if dup == True:
+				addedQuestion = "That class already exists"
+				self.redirect('/admin')
+			else:
+				C = Course(subject = self.request.get('subject'), name = (self.request.get('subject') + self.request.get('num')),
+							id = Ccount)
+				C.put()
+				time.sleep(.5)
+				addedQuestion = "Class successfully added to the system"
+				self.redirect('/admin')
 		
 
 # ##############################################################################################################################################
