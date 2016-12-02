@@ -1,0 +1,44 @@
+<html>
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+	<title>ADMIN</title>
+	<div id="orangeBox"></div>
+	<style>
+	
+	body{
+		background-color: #ECF0F1;
+		font-family: 'Roboto', sans-serif;
+	}
+	#orangeBox {
+		background-color: #F96E5B; 
+		height: 50px; 
+		width: 100%; 
+	}
+	#logo{
+		height: 40px;
+	}
+	</style>
+</head>
+
+<body>
+Add new Class
+<form method = 'post', action = '/addClass'>
+	<p>Subject</p><select name = 'subject'>
+		<option value = 'ANTRHO'>Anthro</option>
+		<option value = 'BIO'>Bio</option>
+		<option value = 'CS'>CS</option>
+		<option value = 'HIS'>HIS</option>
+		<option value = 'UWBW'>UWBW</option>
+		<option value = 'MATH'>MATH</option>
+		<option value = 'ENG'>ENG</option>
+		<option value = 'PHY'>PHY</option>
+		<option value = 'ECE'>ECE</option>
+	</select>
+	Course number<input type='text' name = 'num'>
+	<input type='submit' value='Add Course'>
+</form>	
+<a href = '/goHome'>Sign out</a>
+	
+	
