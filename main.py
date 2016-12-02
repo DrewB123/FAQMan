@@ -30,6 +30,7 @@ class Questions(ndb.Model):
 	inFAQ = ndb.BooleanProperty()
 	id = ndb.IntegerProperty()
 	asker = ndb.StringProperty()
+	timestamp = ndb.DateTimeProperty(auto_now)
 	
 class Course(ndb.Model):
 	classlist = ndb.StringProperty(repeated=True)
@@ -79,24 +80,32 @@ class MainHandler(webapp2.RequestHandler):
 		template = JINJA_ENVIRONMENT.get_template('home-page.html')
 		global error
 		login = self.request.get("user_email")
-		pw = self.request.get("pass_word")
-		user = User.query(User.email == login)
 		
-		if user.count() != 1:
-			error = "Invalid email!"
-			return self.redirect('/home')
-		
+# ##############CHECK FOR ADMIN###############################################################
+		if login == "admin":
+			if password == "BATMAN":
+				return self.redirect('/admin')
+# ############################################################################################
+
 		else:
-			u = User()
-			u = user.get()
-			#checks to see if the password is correct
-			if u.password == pw:
-				error = ""
-				self.response.set_cookie('uname', u.email, path='/')
-				return self.redirect('/login')
-			else:
-				error = "Incorrect password!"
+			pw = self.request.get("pass_word")
+			user = User.query(User.email == login)
+		
+			if user.count() != 1:
+				error = "Invalid email!"
 				return self.redirect('/home')
+		
+			else:
+				u = User()
+				u = user.get()
+				#checks to see if the password is correct
+				if u.password == pw:
+					error = ""
+					self.response.set_cookie('uname', u.email, path='/')
+					return self.redirect('/login')
+				else:
+					error = "Incorrect password!"
+					return self.redirect('/home')
 
 # ##############################################################################################################################################		
 class SignupHandler(webapp2.RequestHandler):
@@ -335,16 +344,10 @@ class viewQuestions(webapp2.RequestHandler):
 #	view FAQ
 class FAQHandler(webapp2.RequestHandler):
 	def get(self):
-		if self.request.cookies.get('uname'):
-			usr = self.request.cookies.get('uname')
-			usr = User.query(User.email==usr).fetch()
-			usr = usr[0]
-			FAQ_questions = Questions.query(Questions.inFAQ == True, Questions.classQ == question_class).fetch()
-			template = JINJA_ENVIRONMENT.get_template('FAQ.html')
-			self.response.write(template.render({'questions':FAQ_questions, 'class':question_class,
+		FAQ_questions = Questions.query(Questions.inFAQ == True, Questions.classQ == question_class).fetch()
+		template = JINJA_ENVIRONMENT.get_template('FAQ.html')
+		self.response.write(template.render({'questions':FAQ_questions, 'class':question_class,
 												'user':usr}))
-		else:
-			self.redirect('/home')
 											
 	def post(self):
 		global question_class
@@ -365,6 +368,15 @@ class Delete(webapp2.RequestHandler):
 				q.put()
 				time.sleep(0.1)
 		self.redirect('/FAQ')
+
+# ###############################################################################################################################################
+# Admin Page
+class AdminHandler(webapp2.RequestHandler):
+	def get(self):
+		template = JINJA_ENVIRONMENT.get_template('admin.html')
+		self.response.write(template.render())
+# ##### Take Data from admin page to add new course or delete users
+	def post(self):
 
 # ##############################################################################################################################################
 class ClearHandler(webapp2.RequestHandler):
@@ -394,5 +406,6 @@ app = webapp2.WSGIApplication([
 	('/goHome', goHome),
 	('/viewQ', viewQuestions),
 	('/password', changePassword),
+	('/admin', adminHandler),
 	('/clear', ClearHandler)
 ], debug=True)
