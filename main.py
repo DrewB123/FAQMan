@@ -18,6 +18,7 @@ import webapp2
 import urllib
 import jinja2
 import os
+import time
 from google.appengine.ext import ndb
 
 JINJA_ENVIRONMENT = jinja2.Environment(loader = jinja2.FileSystemLoader(os.path.dirname(__file__)))
@@ -28,31 +29,41 @@ class Questions(ndb.Model):
 	classQ = ndb.StringProperty()
 	inFAQ = ndb.BooleanProperty()
 	id = ndb.IntegerProperty()
+	asker = ndb.StringProperty()
+	timestamp = ndb.DateTimeProperty(auto_now = True)
 	
+class Course(ndb.Model):
+	classlist = ndb.StringProperty(repeated=True)
+	name = ndb.StringProperty()
+	subject = ndb.StringProperty()
+	id = ndb.IntegerProperty()
+		
 class User(ndb.Model):
 	Fname = ndb.StringProperty()
 	Lname = ndb.StringProperty()
 	email = ndb.StringProperty()
 	password = ndb.StringProperty()
+	isInstructor = ndb.BooleanProperty()
 	
 	#get list of classes by calling user.classes
 	classes = ndb.StringProperty(repeated=True)
-	isInstructor = ndb.BooleanProperty()
 
-u = User()
+
 question_class = ""
 addedQuestion = ""
 error = ""
 classClicked = ""
 Qcount = 0
+Ccount = 0
 
 
 # On startup get a count of all questions to set Qcount
 # and go to the home page.
 class StartupHandler(webapp2.RequestHandler):
 	def get(self):
-		global Qcount
+		global Qcount, Ccount
 		Qcount = Questions.query().count()
+		Ccount = Course.query().count()
 		self.redirect('/home')
 	
 	def post(self):
@@ -73,29 +84,48 @@ class MainHandler(webapp2.RequestHandler):
 		global error
 		login = self.request.get("user_email")
 		pw = self.request.get("pass_word")
-		user = User.query(User.email == login)
-		
-		if user.count() != 1:
-			error = "Invalid email!"
-			return self.redirect('/home')
-		
+
+# ##############CHECK FOR ADMIN###############################################################################################################
+		if login == "admin":
+			if pw == "BATMAN":
+				self.response.set_cookie('uname', login, path='/')
+				return self.redirect('/admin')
+# #############################################################################################################################################
 		else:
-			global u
-			u = user.get()
-			#checks to see if the password is correct
-			if u.password == pw:
-				error = ""
-				self.response.set_cookie('uname', u.email, path='/')
-				return self.redirect('/login')
-			else:
-				error = "Incorrect password!"
+			user = User.query(User.email == login)
+			
+			if user.count() != 1:
+				error = "Invalid email!"
 				return self.redirect('/home')
+			
+			else:
+				u = User()
+				u = user.get()
+				#checks to see if the password is correct
+				if u.password == pw:
+					error = ""
+					self.response.set_cookie('uname', u.email, path='/')
+					return self.redirect('/login')
+				else:
+					error = "Incorrect password!"
+					return self.redirect('/home')
 
 # ##############################################################################################################################################		
 class SignupHandler(webapp2.RequestHandler):
 	def get(self):
+		anthro = Course.query(Course.subject == "ANTRHO").fetch()
+		bio = Course.query(Course.subject == "BIO").fetch()
+		cs = Course.query(Course.subject == "CS").fetch()
+		his = Course.query(Course.subject == "HIS").fetch()
+		uwbw = Course.query(Course.subject == "UWBW").fetch()
+		math = Course.query(Course.subject == "MATH").fetch()
+		eng = Course.query(Course.subject == "ENG").fetch()
+		phy = Course.query(Course.subject == "PHY").fetch()
+		ece = Course.query(Course.subject == "ECE").fetch()
 		template = JINJA_ENVIRONMENT.get_template('signup-page.html')
-		self.response.write(template.render({'error':error}))
+		self.response.write(template.render({'error':error, 'anthro':anthro, 'bio':bio, 
+											'cs':cs, 'his':his, 'uwbw':uwbw, 'math':math, 'eng':eng,
+											'phy':phy, 'ece':ece}))
 		
 	def post(self):
 		global error
@@ -108,9 +138,8 @@ class SignupHandler(webapp2.RequestHandler):
 		
 		# check to see if at least one class is selected
 		enrolled = False
-		for i in range(1, 16):
-			cl = "b" + str(i)
-			if(self.request.get(cl)):
+		for i in range(1, Ccount+1):
+			if(self.request.get(str(i))):
 				enrolled = True
 				break
 				
@@ -155,10 +184,14 @@ class SignupHandler(webapp2.RequestHandler):
 				else:
 					u.isInstructor = False
 		
-				for i in range(1, 16):
-					cl = "b" + str(i)
-					if(self.request.get(cl)):
-						u.classes.append(self.request.get(cl))
+				for i in range(1, Ccount+1):
+					if(self.request.get(str(i))):
+						u.classes.append(self.request.get(str(i)))
+						c = Course.query(Course.id == i)
+						course = c.get()
+						course.classlist.append(u.email)
+						course.put()
+						time.sleep(.1)
 				error = ""
 				u.put()
 				return self.redirect('/success')
@@ -178,6 +211,8 @@ class goHome(webapp2.RequestHandler):
 			self.response.delete_cookie('uname')
 		global error
 		error = ""
+		addedQuestion = ""
+		question_class = ""
 		self.redirect('/home')
 	
 	def post(self):
@@ -185,6 +220,8 @@ class goHome(webapp2.RequestHandler):
 		if self.request.cookies.get('uname'):
 			self.response.delete_cookie('uname')
 		error = ""
+		addedQuestion = ""
+		question_class = ""
 		self.redirect('/home')
 		
 		
@@ -207,15 +244,15 @@ class LoginHandler(webapp2.RequestHandler):
 			usr = User.query(User.email==usr).fetch()
 			usr = usr[0]
 			questions = Questions.query().fetch()
-			numClasses = len(u.classes)
-			if u.isInstructor == True:
+			numClasses = len(usr.classes)
+			if usr.isInstructor == True:
 				template = JINJA_ENVIRONMENT.get_template('Faculty_landing.html')
-				self.response.write(template.render({'user':u, 'classes':numClasses, 'questions':questions, 'added':addedQuestion,
+				self.response.write(template.render({'user':usr, 'classes':numClasses, 'questions':questions, 'added':addedQuestion,
 													'question_class':question_class}))
 				
 			else:
 				template = JINJA_ENVIRONMENT.get_template('student_landing.html')
-				self.response.write(template.render({'classClicked':classClicked, 'user':u, 'classes':numClasses, 'questions':questions, 
+				self.response.write(template.render({'classClicked':classClicked, 'user':usr, 'classes':numClasses, 'questions':questions, 
 													'added':addedQuestion, 'question_class':question_class}))
 		else:
 			self.redirect('/home')
@@ -271,8 +308,9 @@ class addQ(webapp2.RequestHandler):
 		if self.request.get("new-question"):
 			global Qcount
 			Qcount += 1
-			Q = Questions(question = newQ, classQ = question_class, answer = "", id = Qcount)
+			Q = Questions(question = newQ, classQ = question_class, answer = "", id = Qcount, asker = self.request.cookies.get('uname') )
 			Q.put()
+			time.sleep(0.1)
 			addedQuestion = "You're question has been added to the list of questions for "
 			return self.redirect('/login')
                                 
@@ -306,6 +344,7 @@ class answerQ(webapp2.RequestHandler):
 			else:
 				addedQuestion = "The question has been answered"
 				q.put()
+			time.sleep(0.1)
 			self.redirect('/login')
 			
 # ##############################################################################################################################################		
@@ -354,7 +393,47 @@ class Delete(webapp2.RequestHandler):
 			if self.request.get(str(q.id)):
 				q.inFAQ = False
 				q.put()
+				time.sleep(0.1)
 		self.redirect('/FAQ')
+
+# ###############################################################################################################################################
+# Admin Page
+class AdminHandler(webapp2.RequestHandler):
+	def get(self):
+		if self.request.cookies.get('uname'):
+			template = JINJA_ENVIRONMENT.get_template('admin.html')
+			self.response.write(template.render({'added':addedQuestion}))
+		else:
+			self.redirect('/home')
+
+
+# #####################################################################################################################################################
+class addClass(webapp2.RequestHandler):
+	def get(self):
+		self.redirect('/home')
+	def post(self):
+		global Ccount, addedQuestion
+		if self.request.get('num'):
+			classes = Course.query().fetch()
+			Ccount += 1
+			dup = False
+			name = self.request.get('subject') + self.request.get('num')
+			for c in classes:
+				if c.name == name:
+					dup = True
+					break
+			
+			if dup == True:
+				addedQuestion = "That class already exists"
+				self.redirect('/admin')
+			else:
+				C = Course(subject = self.request.get('subject'), name = (self.request.get('subject') + self.request.get('num')),
+							id = Ccount)
+				C.put()
+				time.sleep(.5)
+				addedQuestion = "Class successfully added to the system"
+				self.redirect('/admin')
+		
 
 # ##############################################################################################################################################
 class ClearHandler(webapp2.RequestHandler):
@@ -368,6 +447,11 @@ class ClearHandler(webapp2.RequestHandler):
 		questions = Questions.query()
 		for q in questions:
 			q.key.delete()
+			
+		Courses = Course.query()
+		for c in Courses:
+			c.key.delete()
+		time.sleep(.2)
 		self.redirect('/signup')
 # ##############################################################################################################################################		
 class PublicFAQHandler(webapp2.RequestHandler):
@@ -377,7 +461,7 @@ class PublicFAQHandler(webapp2.RequestHandler):
 ################################################################################################################################################
 app = webapp2.WSGIApplication([
 	('/', StartupHandler),
-  	('/home', MainHandler),
+    ('/home', MainHandler),
 	('/signup', SignupHandler),
 	('/success', SuccessHandler),
 	('/login', LoginHandler),
@@ -388,6 +472,8 @@ app = webapp2.WSGIApplication([
 	('/goHome', goHome),
 	('/viewQ', viewQuestions),
 	('/password', changePassword),
-	('/clear', ClearHandler),
 	('/publicFAQ', PublicFAQHandler)
+	('/admin', AdminHandler),
+	('/addClass', addClass),
+	('/clear', ClearHandler)
 ], debug=True)
