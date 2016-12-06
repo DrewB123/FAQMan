@@ -29,7 +29,6 @@ class Questions(ndb.Model):
 	inFAQ = ndb.BooleanProperty()
 	id = ndb.IntegerProperty()
 	
-	
 class User(ndb.Model):
 	Fname = ndb.StringProperty()
 	Lname = ndb.StringProperty()
@@ -371,7 +370,11 @@ class ClearHandler(webapp2.RequestHandler):
 			q.key.delete()
 		self.redirect('/signup')
 # ##############################################################################################################################################		
-
+class PublicFAQHandler(webapp2.RequestHandler):
+	def get(self): 
+		template = JINJA_ENVIRONMENT.get_template('public-FAQ.html')
+		self.response.write(template.render())
+################################################################################################################################################
 app = webapp2.WSGIApplication([
 	('/', StartupHandler),
   	('/home', MainHandler),
@@ -385,5 +388,6 @@ app = webapp2.WSGIApplication([
 	('/goHome', goHome),
 	('/viewQ', viewQuestions),
 	('/password', changePassword),
-	('/clear', ClearHandler)
+	('/clear', ClearHandler),
+	('/publicFAQ', PublicFAQHandler)
 ], debug=True)
