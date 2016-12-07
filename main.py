@@ -61,7 +61,7 @@ Ccount = 0
 # and go to the home page.
 class StartupHandler(webapp2.RequestHandler):
 	def get(self):
-		global Qcount, Ccount
+		global Qcount, Ccount, error
 		Qcount = Questions.query().count()
 		Ccount = Course.query().count()
 		self.redirect('/home')
@@ -239,6 +239,12 @@ class SuccessHandler(webapp2.RequestHandler):
 #	login page
 class LoginHandler(webapp2.RequestHandler):
 	def get(self):
+	
+# #####using unused global variable in template for comparison purposes during deletion from FAQ so we don't lose class name#################
+		global error 
+		error = " "
+# ################################################################################################################
+
 		if self.request.cookies.get('uname'):
 			usr = self.request.cookies.get('uname')
 			usr = User.query(User.email==usr).fetch()
@@ -360,41 +366,8 @@ class viewQuestions(webapp2.RequestHandler):
 		classClicked = list(classClicked.keys())
 		classClicked = classClicked[0]   
 		self.redirect('/login')
-
-# ##############################################################################################################################################		
-#	view FAQ
-class FAQHandler(webapp2.RequestHandler):
-	def get(self):
-		if self.request.cookies.get('uname'):
-			usr = self.request.cookies.get('uname')
-			usr = User.query(User.email==usr).fetch()
-			usr = usr[0]
-			FAQ_questions = Questions.query(Questions.inFAQ == True, Questions.classQ == question_class).fetch()
-			template = JINJA_ENVIRONMENT.get_template('FAQ.html')
-			self.response.write(template.render({'questions':FAQ_questions, 'class':question_class,
-												'user':usr}))
-		else:
-			self.redirect('/home')
-											
-	def post(self):
-		global question_class
-		question_class = self.request.get("FAQclass")
-		self.redirect('/FAQ')
 	
-# ##############################################################################################################################################			
-#	Delete questions from the FAQ
-class Delete(webapp2.RequestHandler):
-	def get(self):
-		self.redirect('/FAQ')
-	def post(self):
-		global error
-		FAQ_questions = Questions.query(Questions.inFAQ == True, Questions.classQ == question_class).fetch()
-		for q in FAQ_questions:
-			if self.request.get(str(q.id)):
-				q.inFAQ = False
-				q.put()
-				time.sleep(0.1)
-		self.redirect('/FAQ')
+
 
 # ###############################################################################################################################################
 # Admin Page
@@ -467,24 +440,46 @@ class PublicFAQHandler(webapp2.RequestHandler):
 # for an Instructor to use outside of the application. 
 class ViewFAQHandler(webapp2.RequestHandler): 
 	def get(self): 
-		# This is necessary to get rid of symbols in the URL and make it query-able.
-		enc_course = self.request.get("co")
-		course_name = urllib.unquote(enc_course)
+		global question_class
+		if self.request.cookies.get('uname'):
+			usr = self.request.cookies.get('uname')
+			usr = User.query(User.email==usr).fetch()
+			usr = usr[0]
 		
-		question_list = Questions.query(Questions.classQ == course_name).fetch()
+		if error != question_class:
+			# This is necessary to get rid of symbols in the URL and make it query-able.
+			enc_course = self.request.get("co")
+			question_class = urllib.unquote(enc_course)
+		
+		FAQ_questions = Questions.query(Questions.inFAQ == True, Questions.classQ == question_class).fetch()
 		template = JINJA_ENVIRONMENT.get_template('viewFAQ.html')
-		self.response.write(template.render({'question_list' : question_list, 'course' : course_name}))
+		self.response.write(template.render({'questions' : FAQ_questions, 'class' : question_class, 'user':usr}))
 
-################################################################################################################################################
+# ##############################################################################################################################################			
+#	Delete questions from the FAQ
+class Delete(webapp2.RequestHandler):
+	def get(self):
+		self.redirect('/viewFAQ')
+	def post(self):
+		global error, question_class
+		error = question_class
+		FAQ_questions = Questions.query(Questions.inFAQ == True, Questions.classQ == question_class).fetch()
+		for q in FAQ_questions:
+			if self.request.get(str(q.id)):
+				q.inFAQ = False
+				q.put()
+				time.sleep(0.1)
+		self.redirect('/viewFAQ')
+
+# ###############################################################################################################################################
 app = webapp2.WSGIApplication([
 	('/', StartupHandler),
-    ('/home', MainHandler),
+        ('/home', MainHandler),
 	('/signup', SignupHandler),
 	('/success', SuccessHandler),
 	('/login', LoginHandler),
 	('/answerQ', answerQ),
 	('/addQ', addQ),
-	('/FAQ', FAQHandler),
 	('/delete', Delete),
 	('/goHome', goHome),
 	('/viewQ', viewQuestions),
