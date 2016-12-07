@@ -101,15 +101,11 @@ details[open] summary:before {content: "-"; margin-top: -4px;}
 
 	<div class="Classes_Container" style="padding: 25px;">
 
-		<form method="post" action="/FAQ">
 		<h3>FAQs for {{user.Fname}}'s Classes</h3>
-		<select name="FAQclass" id="FAQclass">
 		{% for i in range(0, classes) %}
-			<option value="{{user.classes[i]}}">{{user.classes[i]}}</option>
+			<a href="/viewFAQ?co={{user.classes[i]}}">{{user.classes[i]}}</a><br>
 		{% endfor %}
-		</select>
-		<input type="submit" value="Go to FAQ" id = "SFAQ" class = "faqB">
-	</form>
+
 	</div>
 	
 		<form method = "post" action = "/answerQ">
