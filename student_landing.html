@@ -106,15 +106,10 @@ details[open] summary:before {content: "-"; margin-top: -4px;}
 	
 	</div>
 	<div class="Classes_Container" style="padding: 25px;">
-	<form method="post" action="/FAQ">
 		<h3>FAQs for {{user.Fname}}'s Classes</h3>
-		<select name="FAQclass" id="FAQclass">
 		{% for i in range(0, classes) %}
-			<option value="{{user.classes[i]}}">{{user.classes[i]}}</option>
+			<a href="/viewFAQ?co={{user.classes[i]}}">{{user.classes[i]}}</a><br>
 		{% endfor %}
-		</select>
-		<input type="submit" value="Go to FAQ" id="question-submit">
-	</form>
 	</div>
 		<div>
 		<form method="post" action="/addQ">
@@ -148,8 +143,6 @@ details[open] summary:before {content: "-"; margin-top: -4px;}
 				<summary>{{q.question}} <span style="color: red;">Unanswered</span></summary>
 			{% else %}
 				<summary>{{q.question}}</summary>
-				<br />
-				<br />
 				{{ q.answer }}
 			{% endif %}
 			</details>
