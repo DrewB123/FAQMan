@@ -26,5 +26,10 @@
 			<img id="logo" alt="FAQMan" src="http://i.imgur.com/uBa30uv.png">
 			<p id="in-prog">This page is empty--but we're working on it!</p>
 		</div>
+		<div class="container" id="courses">
+			{% for course in courses %}
+				<a href="/viewFAQ?co={{course.name}}">{{course.name}}</a></br>
+			{% endfor %}
+		</div>
 	<body>
 </html>

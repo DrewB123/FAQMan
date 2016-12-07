@@ -454,10 +454,27 @@ class ClearHandler(webapp2.RequestHandler):
 		time.sleep(.2)
 		self.redirect('/signup')
 # ##############################################################################################################################################		
+# This handler displays a list of all courses. 
 class PublicFAQHandler(webapp2.RequestHandler):
 	def get(self): 
+		# Get a list of *all* courses; pass it to the template.
+		course_list = Course.query().fetch()
 		template = JINJA_ENVIRONMENT.get_template('public-FAQ.html')
-		self.response.write(template.render())
+		self.response.write(template.render({'courses' : course_list}))
+
+# ##############################################################################################################################################
+# This handler displays an individual class's FAQ page. The URL can be copied
+# for an Instructor to use outside of the application. 
+class ViewFAQHandler(webapp2.RequestHandler): 
+	def get(self): 
+		# This is necessary to get rid of symbols in the URL and make it query-able.
+		enc_course = self.request.get("co")
+		course_name = urllib.unquote(enc_course)
+		
+		question_list = Questions.query(Questions.classQ == course_name).fetch()
+		template = JINJA_ENVIRONMENT.get_template('viewFAQ.html')
+		self.response.write(template.render({'question_list' : question_list, 'course' : course_name}))
+
 ################################################################################################################################################
 app = webapp2.WSGIApplication([
 	('/', StartupHandler),
@@ -472,7 +489,8 @@ app = webapp2.WSGIApplication([
 	('/goHome', goHome),
 	('/viewQ', viewQuestions),
 	('/password', changePassword),
-	('/publicFAQ', PublicFAQHandler)
+	('/publicFAQ', PublicFAQHandler),
+	('/viewFAQ', ViewFAQHandler),
 	('/admin', AdminHandler),
 	('/addClass', addClass),
 	('/clear', ClearHandler)
