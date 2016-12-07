@@ -1,20 +1,100 @@
-<!DOCTYPE>
+<!doctype html>
 <html>
-	<head>
-		<title>FAQMan: Home Page</title>
-		<!-- To use this font for other pages, copy this link, and put it in the head. -->
-		<link href="home-page.css" rel="stylesheet">
-		<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
-		<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
-	</head>
-	<body>
-		<div class="container">
-			<h2>{{course}}</h2>
-			{% for question in question_list %}
-				<div class="container">
-					<p>{{question.question}}</p>
-					<p>{{question.answer}}</p>
-			{% endfor %}
-		</div>
-	</body>
-</html>
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="FAQ.css"> 
+	<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+	<title>{{class}} FAQ</title>
+<style>
+	
+	body{
+		background-color: #ECF0F1;
+		font-family: 'Roboto', sans-serif;
+		}
+
+	#orangeBox {
+		background-color: #F96E5B; 
+		height: 50px; 
+		width: 100%; 
+		}
+
+	.question{	
+		width:500px;
+		font-weight: 900;
+		font-style: italic;
+		}
+		
+	.answer{
+		color:#F96E5B;
+		}
+
+	.heading{
+		color:black;
+		left : 0px;
+		font-weight:normal;
+		font-style: normal;
+	}
+
+
+	.addA{
+		height:50px;
+		width: 400px;
+	}
+
+	#logo{
+		height: 40px;
+	}
+
+
+	body {
+		line-height: 1;
+	}
+
+	ul {
+		list-style: none;
+	}
+	
+	</style>
+	<div id="orangeBox"></div>
+</head>
+<body>
+<header>
+	<h1><img id="logo" src="http://i.imgur.com/tYSNXFo.png"/>{{class}} FAQ</h1>
+</header>
+<section class="FAQ">
+
+{% if user.isInstructor == True %}
+	<div class="faq-items">
+		<ul>
+		<form method = 'post' action = '/delete'>
+		{% for q in questions %}
+		<li class = "question">
+		 <h2 class = "heading"><input type = 'checkbox' name = '{{q.id}}'> Question:</h2>
+			{{q.question}}
+			<div class = "answer">
+			<h2 class = "heading"> Answer: </h2>
+				<p>{{q.answer}}</p>
+			</div>
+			</li><br><br>
+		{% endfor %}
+		<input type = 'submit' id = 'delete' value = 'Delete selected questions from FAQ'>
+		</form>
+
+{%else%}
+	<div class="faq-items">
+		<ul>
+		{% for q in questions %}
+		<li class = "question">
+		<h2 class = "heading"> Question:</h2>
+			{{q.question}}
+			<div class = "answer">
+			<h2 class = "heading"> Answer: </h2>
+				<p>{{q.answer}}</p>
+			</div>
+			</li><br><br>
+		{% endfor %}
+{% endif %}
+
+
+<a href = '/login'> Back to your login page </a>
