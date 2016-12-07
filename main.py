@@ -445,7 +445,8 @@ class ViewFAQHandler(webapp2.RequestHandler):
 			usr = self.request.cookies.get('uname')
 			usr = User.query(User.email==usr).fetch()
 			usr = usr[0]
-		
+		else:
+			usr = User()
 		if error != question_class:
 			# This is necessary to get rid of symbols in the URL and make it query-able.
 			enc_course = self.request.get("co")
