@@ -2,137 +2,187 @@
 <html>
 
 <head>
-	<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
-	<title> {{user.Fname}}'s Login Page</title>
+		<title> {{user.Fname}}'s Login Page</title>
+		<link href="home-page.css" rel="stylesheet">
+		<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+		<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+	
 	<style>
+
+		body {
+			background-color: #F1F3F3;
+			font-family: 'Roboto', sans-serif;
+			color: #465053; 
+		}
+
+		.btn {
+			background-color: #FCD68A;
+		}
+		
 		.Details_Container {
 			width: 500px
 		}
 		
-		body {
-			background-color: #ECF0F1;
-			font-family: 'Roboto', sans-serif;
-		}
 		
-		#pending-questions {
-			position: absolute;
-			top: 8px;
-			left: 558px;
-			width: 500px;
-			height: 545px;
+		#addA {
+			margin-top: 5px; 
+			width: 363px; 
 		}
-		
-		.Classes_Container {
-			width: 500px;
+		#submit-ans {
+			margin-top: 10px; 
+			margin-bottom: 5px; 
 		}
-		
-		.FAQ {
-			width: 500px;
+		#class-select {
+			margin-top: 5px; 
+			size: 30px; 
 		}
-		
-		
-		.addA{
-			width: 300px;
-			height: 50px;
-			position:relative;
-		}
-
-		#SFAQ{
-			position:relative;
-			left:145px;
-			top:20px;
-			background-color: #D7DEE6; 
-			color: #F96E5B; 
-		}
-		
-		.buttons{
-			background-color: #D7DEE6; 
-			color: #F96E5B; 
-			font-weight:bold;
-		}
-		
 		#logo {
 			height: 40px;
 		}
-		#THEBLUEONE {
-			background-color: #F96E5B; 
-			height: 50px; 
+	
+		#subtitle {
+			margin-left: 75px; 
+		}
+		#top-bar {
+			background-color: #FCD68A; 
+			height: 58px; 
 			width: 100%; 
-			}
-		
-			
-details {border: 1px solid #E1E1E1; border-radius: 5px; box-shadow: 0 1px 4px rgba(0, 0, 0, .4); color: #363636; margin: 0 0 .4em; padding: 1%;}
-details[open] {background: #E1E1E1;}
-summary {background: -webkit-linear-gradient(top, #FAFAFA 50%, #E1E1E1 50%); border-radius: 5px; cursor: pointer; font-size: .8em; font-weight: bold; margin: -1%; padding: 8px 0; position: relative; width: 102%;}
-summary:hover, details[open] summary {background: #E1E1E1;}
-summary::-webkit-details-marker {display: none}
-summary:before{border-radius: 5px; content: "+"; color: #363636; display: block; float: left; font-size: 1.5em; font-weight: bold; margin: -2px 10px 0 10px; padding: 0; text-align: center; width: 20px;}
-details[open] summary:before {content: "-"; margin-top: -4px;}
+		}
+		#FAQ-container {
+			margin-top: 150px; 
+			margin-bottom: 75px; 
+		}
+		#signout {
+			color: #465053; 
+			position: absolute; 
+			right: 48%; 
+			padding-bottom: 10px;
+		}
+
+
+		#details-container {
+			position: absolute; 
+			right: 3px; 
+			width: 200px; 
+		}
+		details {
+		    color: #363636;
+		    padding: 1%;
+		}
+		details[open] {
+		    background: #E1E1E1;
+		}
+		summary {
+		    background: #FCD68A;
+		    border-radius: 5px;
+		    cursor: pointer;
+		    font-size: .8em;
+		    font-weight: bold;
+		    margin: -1%;
+		    padding: 8px 0;
+		    position: relative;
+		    width: 102%;
+		}
+		summary:hover,
+		details[open] summary {
+		    background: #E1E1E1;
+		}
+		summary::-webkit-details-marker {
+		    display: none
+		}
+		summary:before {
+		    border-radius: 5px;
+		    content: "+";
+		    color: #363636;
+		    display: block;
+		    float: left;
+		    font-size: 1.5em;
+		    font-weight: bold;
+		    margin: -2px 10px 0 10px;
+		    padding: 0;
+		    text-align: center;
+		    width: 20px;
+		}
+		details[open] summary:before {
+		    content: "-";
+		    margin-top: -4px;
+		}
 
 	</style>
 </head>
 
 <body>
-	<div id="THEBLUEONE"></div>
-	<div class="Details_Container" style="padding: 25px;">
-		
-		<h2><img id="logo" src="http://i.imgur.com/tYSNXFo.png" />Hey {{user.Fname}} {{user.Lname}}. Welcome to your Instructor Account Page.</h2>
-	
-	<form method="post" action="/password">
-		<details>
-			<summary>{{user.Fname}} 's Account</summary>
-			<ul>
-				<li>NAME: {{user.Fname}} {{user.Lname}} </li>
-				<li>EMAIL ADDRESS: {{user.email}} </li>
-			</ul>
 
-			<h2>Change Password</h2>
-			Old Password:<br>
-			<input type="password" name="oldpassword">
-			<br> New Password:<br>
-			<input type="password" name="newpassword">
-			<br> Confirm New Password:<br>
-			<input type="password" name="confirmnewpassword">
-			<br><br>
-			<input type="submit" class = "buttons" id = "bPassword">
-		</details>
-	</form>
+	<div id="top-bar">
+		<div id="details-container">
+			<details>
+				<summary>Account Details</summary>
+				<ul
+					<li>Email Address: {{user.email}} </li>
+				</ul>
+
+				<h4>Change Password</h4>
+				<form class="form-group" method="post" action="/password">
+					<input type="password" class="form-control" name="oldpassword" placeholder="Current Password" >
+					<input type="password" class="form-control" name="newpassword" placeholder="New Password">
+					<input type="password" class="form-control" name="confirmnewpassword" placeholder="Confirm New Password">
+					<button class="btn" class="form-control" type="submit" id = "bPassword">Submit</button>
+				</form>
+			</details>
+		</div>
 	</div>
 
-	<div class="Classes_Container" style="padding: 25px;">
-
-		<h3>FAQs for {{user.Fname}}'s Classes</h3>
-		{% for i in range(0, classes) %}
-			<a href="/viewFAQ?co={{user.classes[i]}}">{{user.classes[i]}}</a><br>
-		{% endfor %}
-
+	<div class="jumbotron">
+		<div class="container">
+			<a class="navbar-brand" href="#">
+				<img id="logo" alt="FAQMan" src="http://i.imgur.com/uBa30uv.png">
+			</a>
+			<div class="container">
+			<h2 id="heading"><h2>Hi, {{user.Fname}}.</h2>
+			<h3 id="subtitle">It looks like you have some pending questions.</h3>
+			</div>
+		</div>
 	</div>
-	
-		<form method = "post" action = "/answerQ">
-			<div>
-				<h3>Answer to selected question </h3>
-				<textarea class = "addA" name = "answer"></textarea></p><br>
-				<b>Check here to add question to FAQ</b> <input type = "checkbox" name = "Add_to_FAQ"><br>
-				<input type = "submit" id = "SFAQ" value = "Answer">
-				</select>
+
+	<div class="container">
+		<div id="main-form" class="row">
+			<form method = "post" action = "/answerQ">
+				<div id="pending-questions" class="col-md-6">
+					<h3>Pending Questions</h3>
+						{%for i in range(0, classes) %}
+							<div>
+								<label for="class-select">{{user.classes[i]}}</label>
+								<select id="class-select">
+									{% for q in questions %}
+										{% if q.classQ==user.classes[i] and q.answer == "" %}
+											<option value="{{q.id|string}}"></option>
+										{% endif %}
+									{% endfor %}
+								</select>
+							</div>
+						{% endfor %}
+						
+				</div>
 				
-			</div>
-			<h4>{{added}}</h4>
-
-	<div id="pending-questions" style="padding: 25px;">
-		<h4>Pending Questions</h4>
-			{%for i in range(0, classes) %}
-			<div>
-				<details><summary>{{user.classes[i]}}</summary>
-					{% for q in questions %}
-						{% if q.classQ==user.classes[i] and q.answer == "" %}
-							<p> <br>{{q.question}}<input type = "radio" name = "question" value = "{{q.id|string}}"></p>
-						{% endif %}
-					{% endfor %}
-				</details>
-			</div>
-			{% endfor %}
+				<div id="answer-question" class="col-md-6">
+					<h3>Answer the selected question</h3>
+					<textarea class="form-control" id= "addA" name = "answer"></textarea><br>
+					<b>Check here to add a new question to the selected FAQ.</b> <input type = "checkbox" name = "Add_to_FAQ"><br>
+					<button id="submit-ans" class="btn" type="submit">Submit Answer</button>
+				</div>
+				<h4>{{added}}</h4>
 			</form>
-			<a href='/goHome'> Sign out </a>
+		</div>
+
+		<div id="FAQ-container">
+			<h3>FAQs for {{user.Fname}}'s Classes</h3>
+			{% for i in range(0, classes) %}
+				<a href="/viewFAQ?co={{user.classes[i]}}">{{user.classes[i]}}</a><br>
+			{% endfor %}
+		</div>
 	</div>
+	<div id="signout">
+		<a class="btn" href='/goHome'> Sign out </a>
+	</div>
+	</body>
 </html>

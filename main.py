@@ -475,7 +475,7 @@ class Delete(webapp2.RequestHandler):
 # ###############################################################################################################################################
 app = webapp2.WSGIApplication([
 	('/', StartupHandler),
-        ('/home', MainHandler),
+	('/home', MainHandler),
 	('/signup', SignupHandler),
 	('/success', SuccessHandler),
 	('/login', LoginHandler),
