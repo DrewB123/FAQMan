@@ -57,7 +57,7 @@ classClicked = ""
 #If you need to have the number of questions or anything
 #in the code, you should ALWAYS query for it, not save
 #the value in this variable
-Qcount = 0
+#Qcount = 0
 Ccount = 0
 
 
@@ -65,7 +65,7 @@ Ccount = 0
 # and go to the home page.
 class StartupHandler(webapp2.RequestHandler):
 	def get(self):
-		global Qcount, Ccount, error
+		#global Qcount, Ccount, error
 		Qcount = Questions.query().count()
 		Ccount = Course.query().count()
 		self.redirect('/home')
@@ -316,8 +316,8 @@ class addQ(webapp2.RequestHandler):
 		question_class = self.request.get("add-new-question")
                         
 		if self.request.get("new-question"):
-			global Qcount
-			Qcount += 1
+			#global Qcount
+			Qcount = Questions.query().count() + 1
 			Q = Questions(question = newQ, classQ = question_class, answer = "", id = Qcount, asker = self.request.cookies.get('uname') )
 			Q.put()
 			time.sleep(0.1)
@@ -340,7 +340,7 @@ class answerQ(webapp2.RequestHandler):
 	
 	def post(self):
 		global addedQuestion, question_class
-		question_class = self.request.get("new-entry")
+		#question_class = self.request.get("new-entry")
 		
 		if self.request.get("question") and self.request.get("answer"):
 			q_id = self.request.get("question")

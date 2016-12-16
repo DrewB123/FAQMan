@@ -149,18 +149,18 @@
 			<form method = "post" action = "/answerQ">
 				<div id="pending-questions" class="col-md-6">
 					<h3>Pending Questions</h3>
-						{%for i in range(0, classes - 1) %}
-							<div>
-								<select id="class-select" name="question">
-									<option value="" selected>Select a pending question.</option>
+						<div>
+							<select id="class-select" name="question">
+								<option value="" selected>Select a pending question.</option>
+								{%for i in range(0, classes) %}
 									{% for q in questions %}
 										{% if q.classQ==user.classes[i] and q.answer == "" %}
 											<option value="{{q.id|string}}">{{q.classQ}} {{q.question}}</option>
 										{% endif %}
 									{% endfor %}
-								</select>
-							</div>
-						{% endfor %}
+								{% endfor %}
+							</select>
+						</div>
 				</div>
 				
 				<div id="answer-question" class="col-md-6">
