@@ -53,6 +53,10 @@ question_class = ""
 addedQuestion = ""
 error = ""
 classClicked = ""
+#This is prone to error and stale data.
+#If you need to have the number of questions or anything
+#in the code, you should ALWAYS query for it, not save
+#the value in this variable
 Qcount = 0
 Ccount = 0
 
