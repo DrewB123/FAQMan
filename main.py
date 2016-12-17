@@ -30,7 +30,9 @@ class Questions(ndb.Model):
 	inFAQ = ndb.BooleanProperty()
 	id = ndb.IntegerProperty()
 	asker = ndb.StringProperty()
+	
 	timestamp = ndb.DateTimeProperty(auto_now = True)
+	timestampanswered = ndb.DateTimeProperty(auto_now = True)
 	
 class Course(ndb.Model):
 	classlist = ndb.StringProperty(repeated=True)
@@ -318,7 +320,7 @@ class addQ(webapp2.RequestHandler):
 		if self.request.get("new-question"):
 			#global Qcount
 			Qcount = Questions.query().count() + 1
-			Q = Questions(question = newQ, classQ = question_class, answer = "", id = Qcount, asker = self.request.cookies.get('uname') )
+			Q = Questions(question = newQ, classQ = question_class, answer = "", id = Qcount, asker = self.request.cookies.get('uname'), timestamp = datetime.datetime.now() , timestampanswered = None)
 			Q.put()
 			time.sleep(0.1)
 			addedQuestion = "You're question has been added to the list of questions for "
@@ -347,6 +349,7 @@ class answerQ(webapp2.RequestHandler):
 			Q = Questions.query(Questions.id == int(q_id))
 			q = Q.get()
 			q.answer = self.request.get("answer")
+			q.timestampanswered = datetime.datetime.now()
 			if self.request.get("Add_to_FAQ"):
 				q.inFAQ = True
 				addedQuestion = "The question has been answered and added to the FAQ"
