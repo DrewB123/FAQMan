@@ -5,96 +5,92 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="FAQ.css"> 
 	<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+	<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+
 	<title>{{class}} FAQ</title>
-<style>
-	
-	body{
-		background-color: #ECF0F1;
-		font-family: 'Roboto', sans-serif;
+	<style>
+		body {
+			background-color: #F1F3F3;
+			font-family: 'Roboto', sans-serif;
+			color: #465053; 
 		}
 
-	#orangeBox {
-		background-color: #F96E5B; 
-		height: 50px; 
-		width: 100%; 
+		#top-bar {
+			background-color: #FCD68A; 
+			height: 58px; 
+			width: 100%; 
 		}
 
-	.question{	
-		width:500px;
-		font-weight: 900;
-		font-style: italic;
-		}
-		
-	.answer{
-		color:#F96E5B;
+		#logo {
+			height: 40px;
 		}
 
-	.heading{
-		color:black;
-		left : 0px;
-		font-weight:normal;
-		font-style: normal;
-	}
+		#subtitle {
+			margin-left: 75px; 
+		}
 
+		#delete {
+			margin-top: 50px;
+		}
 
-	.addA{
-		height:50px;
-		width: 400px;
-	}
+		#login-return {
+			margin-left: 75px;
+		}
 
-	#logo{
-		height: 40px;
-	}
+		#footer{
+			background-color: #EEEEEE;
+		}
 
+		.btn {
+			background-color: #FCD68A;
+		}
 
-	body {
-		line-height: 1;
-	}
-
-	ul {
-		list-style: none;
-	}
-	
+		.remove-check {
+			margin-right: 15px !important;
+		}
 	</style>
 	<div id="orangeBox"></div>
 </head>
 <body>
-<header>
-	<h1><img id="logo" src="http://i.imgur.com/tYSNXFo.png"/>{{class}} FAQ</h1>
-</header>
-<section class="FAQ">
+	<div id="top-bar"></div>
 
-{% if user.isInstructor == True %}
-	<div class="faq-items">
-		<ul>
-		<form method = 'post' action = '/delete'>
-		{% for q in questions %}
-		<li class = "question">
-		 <h2 class = "heading"><input type = 'checkbox' name = '{{q.id}}'> Question:</h2>
-			{{q.question}}
-			<div class = "answer">
-			<h2 class = "heading"> Answer: </h2>
-				<p>{{q.answer}}</p>
+	<div class="jumbotron">
+		<div class="container">
+			<a class="navbar-brand" href="#">
+				<img id="logo" alt="FAQMan" src="http://i.imgur.com/uBa30uv.png">
+			</a>
+			<div class="container">
+				<h2 id="heading">Hi{{', ' + user.Fname + '!' if user else ' there!'}}</h2>
+				<h3 id="subtitle">Here is the FAQ for {{class}}</h3>
+				<a id="login-return" href='/login'>Click here to go back to your login page</a>
 			</div>
-			</li><br><br>
-		{% endfor %}
-		<input type = 'submit' id = 'delete' value = 'Delete selected questions from FAQ'>
-		</form>
+		</div>
+	</div>
 
-{%else%}
-	<div class="faq-items">
-		<ul>
-		{% for q in questions %}
-		<li class = "question">
-		<h2 class = "heading"> Question:</h2>
-			{{q.question}}
-			<div class = "answer">
-			<h2 class = "heading"> Answer: </h2>
-				<p>{{q.answer}}</p>
-			</div>
-			</li><br><br>
-		{% endfor %}
-{% endif %}
-
-
-<a href = '/login'> Back to your login page </a>
+	<div class="container">
+		{% if questions|length > 0 %}
+			{% if user.isInstructor == True %}
+				<div class="faq-items">
+					<form method = 'post' action = '/delete'>
+						{% for q in questions %}
+							<h2><input class='remove-check' type='checkbox' name='{{q.id}}'>{{q.question}}</h2>
+							<p>{{q.answer}}</p>
+						{% endfor %}
+						<input type='submit' class="btn" id='delete' value='Remove selected questions from FAQ'>
+					</form>
+				</div>
+			{%else%}
+				<div class="faq-items">
+					{% for q in questions %}
+						<h2>{{q.question}}</h2>
+						<p>{{q.answer}}</p>
+					{% endfor %}
+				</div>
+			{% endif %}
+		{% else %}
+			<h2>There are no Questions in this FAQ!</h2>
+		{% endif %}
+		
+	</div>
+</body>
+</html>

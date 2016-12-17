@@ -3,151 +3,158 @@
 
 <head>
 	<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+	<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
 	<title> {{user.Fname}}'s Login Page</title>
 	<style>
-		.Details_Container {
-			width: 500px
-		}
-		
 		body {
-			background-color: #ECF0F1;
+			background-color: #F1F3F3;
 			font-family: 'Roboto', sans-serif;
+			color: #465053; 
 		}
-		
-		#pending-questions {
-			position: absolute;
-			top: 8px;
-			left: 558px;
-			width: 500px;
-			height: 545px;
+
+		#top-bar {
+			background-color: #FCD68A; 
+			height: 58px; 
+			width: 100%; 
 		}
-		
-		.Classes_Container {
-			width: 500px;
-		}
-		
-		.FAQ {
-			width: 500px;
-		}
-		
+
 		#logo {
 			height: 40px;
 		}
-		
-		#question-submit{
-		background-color: #D7DEE6; 
-		color: #F96E5B; 
-		}
-		
-		#THEBLUEONE {
-			background-color: #F96E5B; 
-			height: 50px; 
-			width: 100%; 
-			}
-		#content { border-style: dashed;
-					border-width: 1px;
-					float: right;
-					width: 500px;
-					margin-top: 100px;
-					padding: 25px 25px 25px 25px;}	
-		#main { float: left;
-		}
-		
-details {border: 1px solid #E1E1E1; border-radius: 5px; box-shadow: 0 1px 4px rgba(0, 0, 0, .4); color: #363636; margin: 0 0 .4em; padding: 1%;}
-details[open] {background: #E1E1E1;}
-summary {background: -webkit-linear-gradient(top, #FAFAFA 50%, #E1E1E1 50%); border-radius: 5px; cursor: pointer; font-size: .8em; font-weight: bold; margin: -1%; padding: 8px 0; position: relative; width: 102%;}
-summary:hover, details[open] summary {background: #E1E1E1;}
-summary::-webkit-details-marker {display: none}
-summary:before{border-radius: 5px; content: "+"; color: #363636; display: block; float: left; font-size: 1.5em; font-weight: bold; margin: -2px 10px 0 10px; padding: 0; text-align: center; width: 20px;}
-details[open] summary:before {content: "-"; margin-top: -4px;}
 
+		#subtitle {
+			margin-left: 75px; 
+		}
+
+		#details-container {
+			position: absolute; 
+			right: 3px; 
+			width: 250px; 
+		}
+
+		#details-account {
+			padding: 1%;
+		}
+		#details-account[open] {
+			background: #E1E1E1;
+		}
+		#summary-account {
+			background: #FCD68A;
+			border-radius: 5px;
+			cursor: pointer;
+			font-size: .8em;
+			font-weight: bold;
+			margin: -1%;
+			padding: 8px 0;
+			position: relative;
+			width: 102%;
+		}
+		#summary-account:hover,
+		#details-account[open] #summary-account {
+			background: #E1E1E1;
+		}
+		#summary-account::-webkit-details-marker {
+			display: none
+		}
+		#summary-account:before {
+			border-radius: 5px;
+			content: "+";
+			color: #363636;
+			display: block;
+			float: left;
+			font-size: 1.5em;
+			font-weight: bold;
+			margin: -2px 10px 0 10px;
+			padding: 0;
+			text-align: center;
+			width: 20px;
+		}
+		#details-account[open] #summary-account:before {
+			content: "-";
+			margin-top: -4px;
+		}
+
+		.btn {
+			background-color: #FCD68A;
+		}
 	</style>
 </head>
 
 <body>
+	<div id="top-bar">
+		<div id="details-container">
+			<details id='details-account'>
+				<summary id='summary-account'>Account Details</summary>
+				<ul
+					<li>Email Address: {{user.email}} </li>
+				</ul>
 
+				<h4>Change Password</h4>
+				<form class="form-group" method="post" action="/password">
+					<input type="password" class="form-control" name="oldpassword" placeholder="Current Password" >
+					<input type="password" class="form-control" name="newpassword" placeholder="New Password">
+					<input type="password" class="form-control" name="confirmnewpassword" placeholder="Confirm New Password">
+					<button class="btn" class="form-control" type="submit" id = "bPassword">Submit</button>
+				</form>
+			</details>
+		</div>
+	</div>
 
-	
-	<div id="THEBLUEONE"></div>
-	<div id="main">
-	<div class="Details_Container" style="padding: 25px;">
-	
-		
-		<h2><img id="logo" src="http://i.imgur.com/tYSNXFo.png" />Hey {{user.Fname}} {{user.Lname}}. Welcome to your Student Account Page.</h2>
-		<details>
-			<summary>{{user.Fname}} 's Account</summary>
-			<ul>
-				<li>Name: {{user.Fname}}  {{user.Lname}} </li>
-				<li>Email Address: {{user.email}} </li>
-			</ul>
+	<div class="jumbotron">
+		<div class="container">
+			<a class="navbar-brand" href="#">
+				<img id="logo" alt="FAQMan" src="http://i.imgur.com/uBa30uv.png">
+			</a>
+			<div class="container">
+				<h2 id="heading">Hi, {{user.Fname}}!</h2>
+				{% if classClicked %}
+					<h3 id="subtitle">Here is the FAQ for {{classClicked}}</h3>
+				{% else %}
+					<h3 id="subtitle">Do you have a question you'd like to ask?</h3>
+				{% endif %}
+			</div>
+		</div>
+	</div>
 
-	<form method="post" action="/password">
-			<h2>Change Password</h2>
-			Old Password:<br>
-			<input type="password" name="oldpassword">
-			<br> New Password:<br>
-			<input type="password" name="newpassword">
-			<br> Confirm New Password:<br>
-			<input type="password" name="confirmnewpassword">
-			<br><br>
-			<input type="submit">
-		</details>
-		</form>
-	</div>
-	<div id="class_list">
-	<h3> Select from Class list to view Questions </h3>
-	
-	<form method="post" action="/viewQ" >
-		{% for class in user.classes %}
-			<input type="submit" name="{{class}}" value="{{class}}" id="question-submit" />
-			<br />
-		{% endfor %}
-	</form>
-	
-	</div>
-	<div class="Classes_Container" style="padding: 25px;">
-		<h3>FAQs for {{user.Fname}}'s Classes</h3>
-		{% for i in range(0, classes) %}
-			<a href="/viewFAQ?co={{user.classes[i]}}">{{user.classes[i]}}</a><br>
-		{% endfor %}
-	</div>
-		<div>
-		<form method="post" action="/addQ">
-			<h4>Submit a new question for: </h4>
-			<select name="add-new-question">
-				{% for i in range(0, classes) %}
-					<option value="{{user.classes[i]}}">{{user.classes[i]}}</option>
+	<div class="container">
+		<form method="post" class="form-inline" action="/viewQ" >
+			<h4> Select a class to view its FAQ or submit a new question</h4>
+			<select class="form-control" name="class-clicked" >
+				{% for class in user.classes %}
+					<option value="{{class}}">{{class}}</option>
 				{% endfor %}
 			</select>
-			<label for="new-question">Enter your question below.</label>
-			<input type="textarea" id="new-question" name="new-question">
-			<input type="hidden" name="email" value="{{usersEmail}}">
-			<input type="hidden" name="password" value="{{usersPassword}}">
-			<button type="submit" id="question-submit">Submit your question.</button>
-			<h4>{{added}}{{question_class}}</h4>
-			<a href='/goHome'> Sign out </a>
-		</div>
-	</form>
-	</div>
-	{% if classClicked == "" %}
-		<h2>Select a Class</h2>
-	{% else %}
-		<h2>Questions for class {{classClicked}}</h2>
-	{% endif %}
-	
-	<div id="content">
-	{% for q in questions %}
-		{% if q.classQ == classClicked %}
-			<details style="margin-top: 20px;">	
-			{% if q.answer == "" %}
-				<summary>{{q.question}} <span style="color: red;">Unanswered</span></summary>
-			{% else %}
-				<summary>{{q.question}}</summary>
-				{{ q.answer }}
-			{% endif %}
-			</details>
+			<input type="submit" class="btn" value="Select Class"></input>
+		</form>
+		<hr/>
+
+		{% if classClicked %}
+			<div id="questions">
+				<h3>FAQ Questions</h3>
+				{% for q in questions %}
+					{% if q.classQ == classClicked %}
+						<h4>{{q.question}}</h4>
+						<p>{{q.answer}}</p>
+					{% endif %}
+				{% endfor %}
+			</div>
+			<hr/>
+
+			<form method="post" action="/addQ">
+				<h3>Submit a new question for {{classClicked}}</h3>
+				<textarea class="form-control" name="new-question" rows="3"></textarea>
+				<input type="hidden" name="email" value="{{usersEmail}}">
+				<input type="hidden" name="password" value="{{usersPassword}}">
+				<input type="submit" class="btn" id="question-submit" value="Submit Question"></input>
+			</form>
+			<hr/>
 		{% endif %}
-	{% endfor %}
+
+		<div>
+			<h3>FAQs pages for all your classes</h3>
+			{% for i in range(0, classes) %}
+				<a href="/viewFAQ?co={{user.classes[i]}}">{{user.classes[i]}}</a><br>
+			{% endfor %}
+		</div>
 	</div>
-	
 </html>

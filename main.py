@@ -368,10 +368,7 @@ class viewQuestions(webapp2.RequestHandler):
 	
 	def post(self):
 		global classClicked
-		questions = Questions.query().fetch()
-		classClicked = self.request.POST
-		classClicked = list(classClicked.keys())
-		classClicked = classClicked[0]   
+		classClicked = self.request.get('class-clicked')
 		self.redirect('/login')
 	
 
@@ -454,7 +451,7 @@ class ViewFAQHandler(webapp2.RequestHandler):
 			usr = usr[0]
 		else:
 			usr = User()
-		if error != question_class:
+		if error != question_class or question_class == '':
 			# This is necessary to get rid of symbols in the URL and make it query-able.
 			enc_course = self.request.get("co")
 			question_class = urllib.unquote(enc_course)
