@@ -490,7 +490,7 @@ app = webapp2.WSGIApplication([
 	('/goHome', goHome),
 	('/viewQ', viewQuestions),
 	('/password', changePassword),
-	('/publicFAQ', PublicFAQHandler),
+	('/publicFAQ', ViewFAQHandler),
 	('/viewFAQ', ViewFAQHandler),
 	('/admin', AdminHandler),
 	('/addClass', addClass),

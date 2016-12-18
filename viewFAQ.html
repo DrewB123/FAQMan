@@ -62,7 +62,11 @@
 				<img id="logo" alt="FAQMan" src="http://i.imgur.com/uBa30uv.png">
 			</a>
 			<div class="container">
-				<h2 id="heading">Hi{{', ' + user.Fname + '!' if user else ' there!'}}</h2>
+				{% if user.Fname is not none %}
+					<h2 id="heading">Hi, {{user.Fname}}!</h2>
+				{% else %}
+					<h2 id="heading">Hi, there!</h2>
+				{% endif %}
 				<h3 id="subtitle">Here is the FAQ for {{class}}</h3>
 				<a id="login-return" href='/login'>Click here to go back to your login page</a>
 			</div>
@@ -70,8 +74,9 @@
 	</div>
 
 	<div class="container">
+
 		{% if questions|length > 0 %}
-			{% if user.isInstructor == True %}
+			{% if user and user.isInstructor == True %}
 				<div class="faq-items">
 					<form method = 'post' action = '/delete'>
 						{% for q in questions %}
