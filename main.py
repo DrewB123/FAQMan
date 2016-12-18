@@ -61,16 +61,13 @@ classClicked = ""
 #in the code, you should ALWAYS query for it, not save
 #the value in this variable
 #Qcount = 0
-Ccount = 0
+#Ccount = 0
 
 
 # On startup get a count of all questions to set Qcount
 # and go to the home page.
 class StartupHandler(webapp2.RequestHandler):
 	def get(self):
-		#global Qcount, Ccount, error
-		Qcount = Questions.query().count()
-		Ccount = Course.query().count()
 		self.redirect('/home')
 	
 	def post(self):
@@ -145,6 +142,7 @@ class SignupHandler(webapp2.RequestHandler):
 		
 		# check to see if at least one class is selected
 		enrolled = False
+		Ccount = Course.query().count()
 		for i in range(1, Ccount+1):
 			if(self.request.get(str(i))):
 				enrolled = True
@@ -190,7 +188,8 @@ class SignupHandler(webapp2.RequestHandler):
 						
 				else:
 					u.isInstructor = False
-		
+				
+				Ccount = Course.query().count()
 				for i in range(1, Ccount+1):
 					if(self.request.get(str(i))):
 						u.classes.append(self.request.get(str(i)))
@@ -390,7 +389,8 @@ class addClass(webapp2.RequestHandler):
 	def get(self):
 		self.redirect('/home')
 	def post(self):
-		global Ccount, addedQuestion
+		global addedQuestion
+		Ccount = Course.query().count()
 		if self.request.get('num'):
 			classes = Course.query().fetch()
 			Ccount += 1

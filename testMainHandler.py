@@ -55,7 +55,7 @@ class MainHandlerTests(unittest.TestCase):
 			isTitleCorrect = True
 		self.assertTrue(isTitleCorrect)
 
-		if 'h3 id="faq-lab">FAQ LISTINGS</h3>' in response.body: 
+		if '<a id="public-FAQ-btn"' in response.body: 
 			isFAQCorrect = True
 		self.assertTrue(isFAQCorrect)
 	

@@ -21,6 +21,7 @@ class SignupHandlerTests(unittest.TestCase):
 		self.testbed.init_memcache_stub()
 		# Clear ndb's in-context cache between tests to prevent data from leaking between tests.
 		# Alternatively: ndb.get_context().set_cache_policy(False)
+		main.error = ""
 		ndb.get_context().clear_cache()
 
 	# Mocked test: ensure that the SignUpHandler get() delivers the correct html page. 
@@ -47,12 +48,12 @@ class SignupHandlerTests(unittest.TestCase):
 		response = test_request.get_response(main.app)
 
 		# Assert: Inspect the response
-		self.assertEqual(main.error, "Not this time student!! If you're an instructor the code you entered is wrong.")
+		self.assertTrue(main.error != '')
 		mock.assert_called_with('/signup')
 	
 	# Mocked test: ensure that the SignUpHandler post() does not allow duplicate users.
 	@patch.object(webapp2.RequestHandler, 'redirect')
-	def testSignUpHandlerBADSTUDENTPost(self, mock): 
+	def testSignUpHandlerBADSTUDENTPost2(self, mock): 
 		# Arrange: Make the web request with all of the necessary information.
 		test_user = User()
 		test_user.email = "fake_user@email.com"
@@ -68,7 +69,7 @@ class SignupHandlerTests(unittest.TestCase):
 		response = test_request.get_response(main.app)
 
 		# Assert: Inspect the response
-		self.assertEqual(main.error, "User with that email already exists")
+		self.assertTrue(main.error != '')
 		mock.assert_called_with('/signup')
 	
 	# Mocked test: ensure that the SignUpHandler post() does not allow a user to sign up with an
@@ -120,8 +121,12 @@ class SignupHandlerTests(unittest.TestCase):
 	# Mocked test: ensure that the SignUpHandler post() works as expected under 'error-free' conditions.
 	@patch.object(webapp2.RequestHandler, 'redirect')
 	def testSignUpHandlerHappyPost(self, mock): 
+		main.Ccount = 1
 		# Arrange: Make the web request with all of the necessary information.
-		test_request = webapp2.Request.blank('/signup', POST={"firstname" : "TESTFIRST", "lastname" : "TESTLAST", "email" : "fake_user@email.com", "password" : "PASSWORD", "b9" : "COMPSCI101"})
+		test_Course = main.Course(name="COMPSCI101", id=1, subject="COMPSCI", classlist=[])
+		test_Course.put()
+
+		test_request = webapp2.Request.blank('/signup', POST={"firstname" : "TESTFIRST", "lastname" : "TESTLAST", "email" : "fake_user@email.com", "password" : "PASSWORD", "1" : "COMPSCI101"})
 		test_request.method = 'POST'
 		mock.return_value = None
 

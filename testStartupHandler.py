@@ -45,7 +45,6 @@ class StartupHandlerTests(unittest.TestCase):
 		# Act: Give the request to the app. 
 		response = request.get_response(main.app)
 		# Assert: global variables are empty
-		self.assertEqual(main.Qcount, 0)
 		mock.assert_called_with('/home')
 		
 	# Mocked test: ensure that '/' redirects to the home page.
@@ -56,7 +55,6 @@ class StartupHandlerTests(unittest.TestCase):
 		# Act: Give the request to the app. 
 		response = request.get_response(main.app)
 		# Assert: global variables are empty
-		self.assertEqual(main.Qcount, 0)
 		mock.assert_called_with('/home')
 
 	# Teardown the environment. 
