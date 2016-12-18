@@ -68,6 +68,8 @@ classClicked = ""
 # and go to the home page.
 class StartupHandler(webapp2.RequestHandler):
 	def get(self):
+		if self.request.cookies.get('uname'):
+			self.response.delete_cookie('uname')
 		self.redirect('/home')
 	
 	def post(self):
