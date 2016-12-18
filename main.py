@@ -20,6 +20,7 @@ import jinja2
 import os
 import time
 from google.appengine.ext import ndb
+from datetime import datetime 
 
 JINJA_ENVIRONMENT = jinja2.Environment(loader = jinja2.FileSystemLoader(os.path.dirname(__file__)))
 
@@ -320,7 +321,7 @@ class addQ(webapp2.RequestHandler):
 		if self.request.get("new-question"):
 			#global Qcount
 			Qcount = Questions.query().count() + 1
-			Q = Questions(question = newQ, classQ = question_class, answer = "", id = Qcount, asker = self.request.cookies.get('uname'), timestamp = datetime.datetime.now() , timestampanswered = None)
+			Q = Questions(question = newQ, classQ = question_class, answer = "", id = Qcount, asker = self.request.cookies.get('uname'), timestamp = datetime.now() , timestampanswered = None)
 			Q.put()
 			time.sleep(0.1)
 			addedQuestion = "You're question has been added to the list of questions for "
@@ -349,7 +350,7 @@ class answerQ(webapp2.RequestHandler):
 			Q = Questions.query(Questions.id == int(q_id))
 			q = Q.get()
 			q.answer = self.request.get("answer")
-			q.timestampanswered = datetime.datetime.now()
+			q.timestampanswered = datetime.now()
 			if self.request.get("Add_to_FAQ"):
 				q.inFAQ = True
 				addedQuestion = "The question has been answered and added to the FAQ"

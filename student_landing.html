@@ -107,7 +107,9 @@
 			</a>
 			<div class="container">
 				<h2 id="heading">Hi, {{user.Fname}}!</h2>
-				{% if classClicked %}
+				{% if added != "" %}
+					<h3 id="subtitle">Your question is now pending! You'll get an email when it's answered.</h3>
+				{% elif classClicked %}
 					<h3 id="subtitle">Here is the FAQ for {{classClicked}}</h3>
 				{% else %}
 					<h3 id="subtitle">Do you have a question you'd like to ask?</h3>

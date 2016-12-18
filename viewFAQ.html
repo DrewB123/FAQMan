@@ -44,7 +44,9 @@
 		.btn {
 			background-color: #FCD68A;
 		}
-
+		.answer-p {
+			font-size: 18px; 
+		}
 		.remove-check {
 			margin-right: 15px !important;
 		}
@@ -74,7 +76,7 @@
 					<form method = 'post' action = '/delete'>
 						{% for q in questions %}
 							<h2><input class='remove-check' type='checkbox' name='{{q.id}}'>{{q.question}}</h2>
-							<p>{{q.answer}}</p>
+							<p class="answer-p">{{q.answer}}</p>
 						{% endfor %}
 						<input type='submit' class="btn" id='delete' value='Remove selected questions from FAQ'>
 					</form>
@@ -83,7 +85,7 @@
 				<div class="faq-items">
 					{% for q in questions %}
 						<h2>{{q.question}}</h2>
-						<p>{{q.answer}}</p>
+						<p class="answer-p">{{q.answer}}</p>
 					{% endfor %}
 				</div>
 			{% endif %}
