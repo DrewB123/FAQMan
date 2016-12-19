@@ -9,27 +9,53 @@
 
 		<style>
 			body {
-				background-color: #ECF0F1; 
+				background-color: #F1F3F3;
 				font-family: 'Roboto', sans-serif;
-				color: #525D60; 
-				margin: 0px; 
-				padding: 0px; 
-				text-align: center; 
+				color: #465053; 
 			}
-			#in-prog {
-				margin-right: 80px; 
+
+			#top-bar {
+				background-color: #FCD68A; 
+				height: 58px; 
+				width: 100%; 
+			}
+
+			#logo {
+				height: 40px;
+			}
+
+			#subtitle {
+				margin-left: 75px; 
+			}
+
+			#home-return {
+				margin-left: 75px;
 			}
 		</style>
 	</head>
 	<body>
-		<div class="container">
-			<img id="logo" alt="FAQMan" src="http://i.imgur.com/uBa30uv.png">
-			<p id="in-prog">Check out this FAQ!</p>
+		<div id="top-bar"></div>
+
+		<div class="jumbotron">
+			<div class="container">
+				<a class="navbar-brand" href="#">
+					<img id="logo" alt="FAQMan" src="http://i.imgur.com/uBa30uv.png">
+				</a>
+				<div class="container">
+					<h2 id="heading">Interested in FAQs?</h2>
+					<h3 id="subtitle">Here are some links to every FAQ in FAQman!</h3>
+					<a id="home-return" href='/goHome'>Click here to go back to the home page</a>
+				</div>
+			</div>
 		</div>
-		<div class="container" id="courses">
-			{% for course in courses %}
-				<a href="/viewFAQ?co={{course.name}}">{{course.name}}</a></br>
-			{% endfor %}
+
+		<div class="container">
+			<center>
+				<h2>Check out these FAQs</h2>
+				{% for course in courses %}
+					<h3><a href="/viewFAQ?co={{course.name}}">{{course.name}}</a></h3>
+				{% endfor %}
+			</center>
 		</div>
 	<body>
 </html>
