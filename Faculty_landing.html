@@ -22,12 +22,7 @@
 		.Details_Container {
 			width: 500px
 		}
-		
-		
-		#addA {
-			margin-top: 5px; 
-			width: 363px; 
-		}
+
 		#submit-ans {
 			margin-top: 10px; 
 			margin-bottom: 5px; 
@@ -139,7 +134,7 @@
 			</a>
 			<div class="container">
 			<h2 id="heading"><h2>Hi, {{user.Fname}}.</h2>
-			<h3 id="subtitle">It looks like you have some pending questions.</h3>
+			<h3 id="subtitle">Here is some information about FAQs for your classes!</h3>
 			</div>
 		</div>
 	</div>
@@ -150,14 +145,12 @@
 				<div id="pending-questions" class="col-md-6">
 					<h3>Pending Questions</h3>
 						<div>
-							<select id="class-select" name="question">
+							<select id="class-select" class="form-control" name="question">
 								<option value="" selected>Select a pending question.</option>
-								{%for i in range(0, classes) %}
-									{% for q in questions %}
-										{% if q.classQ==user.classes[i] and q.answer == "" %}
-											<option value="{{q.id|string}}">{{q.classQ}} {{q.question}}</option>
-										{% endif %}
-									{% endfor %}
+								{% for q in questions %}
+									{% if q.classQ in user.classes and (q.answer == "" or q.answer is none) %}
+										<option value="{{q.id|string}}">{{q.classQ}} | {{q.question}}</option>
+									{% endif %}
 								{% endfor %}
 							</select>
 						</div>
@@ -165,8 +158,8 @@
 				
 				<div id="answer-question" class="col-md-6">
 					<h3>Answer the selected question</h3>
-					<textarea class="form-control" id= "addA" name = "answer"></textarea><br>
-					<b>Check here to add the question.</b> <input type = "checkbox" name = "Add_to_FAQ"><br>
+					<textarea class="form-control" id="addA" name="answer" rows="3"></textarea><br>
+					<b>Check here to add the question to the FAQ</b> <input type = "checkbox" name = "Add_to_FAQ"><br>
 					<button id="submit-ans" class="btn" type="submit">Submit Answer</button>
 				</div>
 				<h4>{{added}}</h4>
