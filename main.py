@@ -21,6 +21,10 @@ import os
 import time
 from google.appengine.ext import ndb
 from datetime import datetime 
+from google.appengine.api.mail import EmailMessage
+from google.appengine.api.mail_errors import MissingRecipientsError
+from google.appengine.api import app_identity
+from jinja2 import Environment, FileSystemLoader
 
 JINJA_ENVIRONMENT = jinja2.Environment(loader = jinja2.FileSystemLoader(os.path.dirname(__file__)))
 
@@ -40,7 +44,7 @@ class Course(ndb.Model):
 	name = ndb.StringProperty()
 	subject = ndb.StringProperty()
 	id = ndb.IntegerProperty()
-		
+
 class User(ndb.Model):
 	Fname = ndb.StringProperty()
 	Lname = ndb.StringProperty()
@@ -51,7 +55,56 @@ class User(ndb.Model):
 	#get list of classes by calling user.classes
 	classes = ndb.StringProperty(repeated=True)
 
+# ##############################
+# Email setup
+JE = Environment(loader=FileSystemLoader('.'))
+email_message = EmailMessage()
 
+def redirect_to_main(response, message, duration):
+    response.write(message)
+    response.write('<meta http-equiv="refresh" content="' + str(duration) + ';url=/" />')
+	
+class Email(ndb.Model):
+	from_address = ndb.StringProperty()
+	to_addresses = ndb.StringProperty(repeated=True)
+	subject      = ndb.StringProperty()
+	body         = ndb.StringProperty()
+	sent_date    = ndb.DateTimeProperty(auto_now=True)
+
+	@staticmethod
+	def get_email_from(urlsafe_key):
+		return ndb.Key(urlsafe=urlsafe_key).get()
+
+	@staticmethod
+	def store_email_from(email_message):
+		Email(
+			from_address = email_message.sender,
+			to_addresses = email_message.to,
+			subject      = email_message.subject,
+			body         = email_message.body
+		).put()
+
+		
+	@staticmethod
+	def send_email(sender, to, subject, message):
+		email_message.sender  = sender
+		email_message.to      = to
+		email_message.subject = subject
+		email_message.body    = message
+		email_message.check_initialized()
+		email_message.send()
+
+		Email.store_email_from(email_message)
+
+	def __str__(self):
+		return '%30s | %30s | %30s | %30s | %s' % (
+			self.from_address,
+			self.to_addresses,
+			self.sent_date,
+			self.subject,
+			self.body
+		)
+		
 question_class = ""
 addedQuestion = ""
 error = ""
@@ -62,6 +115,8 @@ classClicked = ""
 #the value in this variable
 #Qcount = 0
 #Ccount = 0
+
+
 
 
 # On startup get a count of all questions to set Qcount
@@ -119,15 +174,19 @@ class MainHandler(webapp2.RequestHandler):
 # ##############################################################################################################################################		
 class SignupHandler(webapp2.RequestHandler):
 	def get(self):
-		courses = Course.query().fetch()
-		subjects = []
-
-		for course in courses:
-			if course.subject not in subjects:
-				subjects.append(course.subject)
-
+		anthro = Course.query(Course.subject == "ANTRHO").fetch()
+		bio = Course.query(Course.subject == "BIO").fetch()
+		cs = Course.query(Course.subject == "CS").fetch()
+		his = Course.query(Course.subject == "HIS").fetch()
+		uwbw = Course.query(Course.subject == "UWBW").fetch()
+		math = Course.query(Course.subject == "MATH").fetch()
+		eng = Course.query(Course.subject == "ENG").fetch()
+		phy = Course.query(Course.subject == "PHY").fetch()
+		ece = Course.query(Course.subject == "ECE").fetch()
 		template = JINJA_ENVIRONMENT.get_template('signup-page.html')
-		self.response.write(template.render({'subjects': subjects, 'courses': courses}))
+		self.response.write(template.render({'error':error, 'anthro':anthro, 'bio':bio, 
+											'cs':cs, 'his':his, 'uwbw':uwbw, 'math':math, 'eng':eng,
+											'phy':phy, 'ece':ece}))
 		
 	def post(self):
 		global error
@@ -314,7 +373,7 @@ class addQ(webapp2.RequestHandler):
 		global question_class, addedQuestion
 		newQ = self.request.get("new-question")
 		question_class = self.request.get("add-new-question")
-
+                        
 		if self.request.get("new-question"):
 			#global Qcount
 			Qcount = Questions.query().count() + 1
@@ -393,7 +452,7 @@ class addClass(webapp2.RequestHandler):
 			classes = Course.query().fetch()
 			Ccount += 1
 			dup = False
-			name = self.request.get('subject') + ' ' + self.request.get('num')
+			name = self.request.get('subject') + self.request.get('num')
 			for c in classes:
 				if c.name == name:
 					dup = True
@@ -403,7 +462,7 @@ class addClass(webapp2.RequestHandler):
 				addedQuestion = "That class already exists"
 				self.redirect('/admin')
 			else:
-				C = Course(subject = self.request.get('subject'), name = (self.request.get('subject') + ' ' + self.request.get('num')),
+				C = Course(subject = self.request.get('subject'), name = (self.request.get('subject') + self.request.get('num')),
 							id = Ccount)
 				C.put()
 				time.sleep(.5)
@@ -474,6 +533,56 @@ class Delete(webapp2.RequestHandler):
 				q.put()
 				time.sleep(0.1)
 		self.redirect('/viewFAQ')
+		
+# ##############################################################################################################################################
+#	Redirecting to email page
+class goEmail(webapp2.RequestHandler):
+	def get(self):
+		emails = Email.query().order(Email.sent_date).fetch()
+		template = JE.get_template('email-page.html')
+		self.response.write(template.render({
+			'emails': emails
+		}))
+		
+class ViewHandler(webapp2.RequestHandler):
+	def get(self):
+		email_key_urlsafe = self.request.get('email')
+		email = Email.get_email_from(email_key_urlsafe)
+		template = JE.get_template('view.html')
+		self.response.write(template.render({
+			'email': email
+        }))
+
+class DeleteEmailHandler(webapp2.RequestHandler):
+	def get(self):
+		email_key_urlsafe = self.request.get('email')
+		ndb.Key(urlsafe=email_key_urlsafe).delete()
+		redirect_to_main(self.response, 'deleted email', 0.5)
+		
+# ##############################################################################################################################################		
+#	Send emails to students so they can register
+class EmailHandler(webapp2.RequestHandler):
+	def get(self):
+		redirect_to_main(self.response, 'ERROR !!!!!', 0.5)
+
+	def post(self):
+		from_address = 'admin@{}.appspotmail.com'.format(app_identity.get_application_id())
+		to_address = filter(lambda x: x.strip(), self.request.get('to_addresses').split(';'))
+		subject = self.request.get('subject')
+		message = self.request.get('message')
+
+		if not to_address or not subject or not message:
+			self.redirect('/goEmail')
+			return
+
+		text_to_print = ''
+		try:
+			Email.send_email(from_address, to_address, subject, message)
+			text_to_print = 'successfully sent email'
+		except MissingRecipientsError:
+			text_to_print = 'No receipients'
+
+		redirect_to_main(self.response, text_to_print, 0.5)
 
 # ###############################################################################################################################################
 app = webapp2.WSGIApplication([
@@ -488,9 +597,14 @@ app = webapp2.WSGIApplication([
 	('/goHome', goHome),
 	('/viewQ', viewQuestions),
 	('/password', changePassword),
-	('/publicFAQ', PublicFAQHandler),
+	('/publicFAQ', ViewFAQHandler),
 	('/viewFAQ', ViewFAQHandler),
 	('/admin', AdminHandler),
 	('/addClass', addClass),
-	('/clear', ClearHandler)
+	('/clear', ClearHandler),
+	('/goEmail', goEmail),
+	('/email', EmailHandler),
+	('/view', ViewHandler),
+	('/delete', DeleteEmailHandler)
+	
 ], debug=True)

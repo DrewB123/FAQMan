@@ -1,23 +1,191 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>Invite Students</Title>
-  </head>
-  
-  <link href="email-page.css" rel="stylesheet">
-	<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
-  <div id="orangeBox"></div>
-  <center><h1> Invite Students</h1></center>
-  <br> Please add in students' emails in the box below to send an email with a link to register.
-  <center>
 
-  <p>Emails:
-    <br>
-    <textarea name="emails" rows="5" cols ="60">e1@gmail.com; e2@gmail.com; e3@gmail.com;</textarea>
-    <br>
-    <form action="mailto:e1@gmail.com; e2@gmail.com; e3@gmail.com;?cc=professor@gmail.com;&subject=FAQMan%20Registration&body=www.FAQMan.com/register" method="post" enctype "text/plain"> 
-    <button id="send-btn" class="button" type="submit">Send</button>
-    </form>
-  </p>
+<head>
+  <title>Invite Students</Title>
+  <!-- To use this font for other pages, copy this link, and put it in the head. -->
+  <link href="home-page.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+  <!--<script> var toggleList = function(listID) {
+					// Gets the element's JS representation
+					var listElement = document.getElementById(listID); 
+					
+					// Toggles
+					if (listElement.style.display === "none") {
+						listElement.style.display = ""; 
+					} else { 
+						listElement.style.display = "none"; 
+					}; 
+				};
+		</script>-->
+  <style>
+    body {
+    				background-color: #F1F3F3; 
+    				font-family: 'Roboto', sans-serif;
+    				color: #465053; 
+    				margin: 0px; 
+    				padding: 0px; 
+    			}
+    			hr { 
+    				display: block;
+    				margin-top: 50px;
+    				margin-bottom: 0.5em;
+    				margin-left: auto;
+    				margin-right: auto;
+    				border-style: inset;
+    				border-width: 1px;
+    				border-color: #465053;
+    			} 
+    			.navbar-default {
+    				background-color: #FCD68A; 
+    				border: none; 
+    			}
+    			.btn-default {
+    				color: #ECF0F1;
+    				background-color: #465053; 
+    			}
+    			.main-txt {
+    				font-size: 20px; 
+    			}
+    			.jumbotron {
+    				color: #465053; 
+    				background-color: #E3E6E8; 
+    			}
+    			#subtitle {
+    				margin-left: 85px; 
+    				margin-bottom: 20px; 
+    				margin-top: 10px; 
+    			}
+    			#get-started-btn {
+    				margin-left: 85px; 
+    				background-color: #465053;
+    				color: #ECF0F1;
+    				border: none; 
+    			}
+    			#public-FAQ-btn {
+    				margin-top: 50px; 
+    				margin-left: 500px; 
+    				background-color: #465053;
+    				color: #ECF0F1;
+    				border: none; 
+    			}
+    			#catchphrase { 
+    				font-style: italic; 
+    				color: #4F595C; 
+    			}
+    			#email {
+    				background-color: #ECF0F1;
+    			}
+    			#password {
+    				background-color: #ECF0F1;
+    			}
+    			#header-text {
+    				padding-top: 10px; 
+    				padding-bottom: 20px; 
+    				margin-top: 20px; 
+    				margin-bottom: 10px; 
+    			}
+				#subject {
+    				padding-top: 10px; 
+    				
+    			}
+    			#logo {
+    				height: 50px;
+    			}
+    			#anaut {
+    				font-size: 10px; 
+    				color: #465053; 
+    				text-align: center; 
+    			}
+    			#need-help {
+    				color: #465053; 
+    				text-align: center; 
+    			}
+    			#top-color-bar {
+    				background-color: #FCD68A; 
+    				height: 58px; 
+    				width: 100%; 
+    				position: absolute;
+    			}
+    			#error-div {
+    				background-color: #FFC2B3; 
+    				width: 100%;
+    			}
+    			#error{
+    				color:#465053;
+    				text-align: center;
+    				/*right: 200px; */
+    			}
+  </style>
+</head>
+
+
+<div id="top-color-bar"></div>
+<div class="container">
+  <nav class="navbar navbar-default">
+    <div class="container-fluid">
+      <h3 class="navbar-text" id="the-title">Invite Students</h3>
+    </div>
+</div>
+<center>
+  <h3> Enter in students' emails to get started! From there, feel free to customize the email to your liking :)</h3>
+	</br>
+    <div class="container">
+	<div id="pending-questions" class="col-md-6">
+      <div id="main-form" class="row">
+        <form action='/email' method='POST'>
+          <table id='send_email_form'>
+            <tr>
+			</br>
+              <th>Student's emails:</th>
+              <td><textarea rows="3" cols="50" name='to_addresses' placeholder='example@domain.com'></textarea></td>
+            </tr>
+            <tr>
+			</div id = "subject">
+			</br>
+              <th>Subject:</th>
+              <td><input type='text' value='FAQMan Registration' name='subject' size='49' /></td>
+			  </div>
+            </tr>
+            <tr>
+              <th>Message:</th>
+              <td><textarea rows='15' cols='80' name='message'>Hello from FAQMan! 
+		  
+Your professor wants you to sign up at FAQMan so that you can have all the answers. Not to your homework, though; just to the questions they have determined were important enough -- or frequently- asked enough-- to be submitted to this spiffy open source-ish resource aggregator. 
+
+The link's below, so have at it!
+http://anauts-faqman-app.appspot.com/signup
+		  
+-The ANauts</textarea></td>
+            </tr>
+          </table>
+          <button type="submit" class="btn btn-default">Send</button>
+        </form>
+		</div>
+		</div>
+        <div id="answer-question" class="col-md-6">
+          {% if emails %}
+          <table id='message_view'>
+            <tr>
+              <th>To</th></br>
+              <th>Subject</th>
+              <th>Date</th>
+              <th></th>
+            </tr>
+            {% for email in emails %}
+            <tr id='highlight'>
+              <td><a href='/view?email={{ email.key.urlsafe() }}'>{{ email.to_addresses | join('<br/>') }}</a></td>
+              <td><a href='/view?email={{ email.key.urlsafe() }}'>{{ email.subject }}</a></td>
+              <td><a href='/view?email={{ email.key.urlsafe() }}'>{{ email.sent_date }}</a></td>
+            </tr>
+            {% endfor %}
+          </table>
+          {% endif %}
   </center>
+  </div>
+  </div>
+  </div>
+  </div>
+
 </html>
