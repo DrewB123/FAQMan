@@ -393,7 +393,7 @@ class addClass(webapp2.RequestHandler):
 			classes = Course.query().fetch()
 			Ccount += 1
 			dup = False
-			name = self.request.get('subject') + self.request.get('num')
+			name = self.request.get('subject') + ' ' + self.request.get('num')
 			for c in classes:
 				if c.name == name:
 					dup = True
@@ -403,7 +403,7 @@ class addClass(webapp2.RequestHandler):
 				addedQuestion = "That class already exists"
 				self.redirect('/admin')
 			else:
-				C = Course(subject = self.request.get('subject'), name = (self.request.get('subject') + self.request.get('num')),
+				C = Course(subject = self.request.get('subject'), name = (self.request.get('subject') + ' ' + self.request.get('num')),
 							id = Ccount)
 				C.put()
 				time.sleep(.5)
