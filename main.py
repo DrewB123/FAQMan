@@ -174,19 +174,15 @@ class MainHandler(webapp2.RequestHandler):
 # ##############################################################################################################################################		
 class SignupHandler(webapp2.RequestHandler):
 	def get(self):
-		anthro = Course.query(Course.subject == "ANTRHO").fetch()
-		bio = Course.query(Course.subject == "BIO").fetch()
-		cs = Course.query(Course.subject == "CS").fetch()
-		his = Course.query(Course.subject == "HIS").fetch()
-		uwbw = Course.query(Course.subject == "UWBW").fetch()
-		math = Course.query(Course.subject == "MATH").fetch()
-		eng = Course.query(Course.subject == "ENG").fetch()
-		phy = Course.query(Course.subject == "PHY").fetch()
-		ece = Course.query(Course.subject == "ECE").fetch()
+		courses = Course.query().fetch()
+		subjects = []
+
+		for course in courses:
+			if course.subject not in subjects:
+				subjects.append(course.subject)
+
 		template = JINJA_ENVIRONMENT.get_template('signup-page.html')
-		self.response.write(template.render({'error':error, 'anthro':anthro, 'bio':bio, 
-											'cs':cs, 'his':his, 'uwbw':uwbw, 'math':math, 'eng':eng,
-											'phy':phy, 'ece':ece}))
+		self.response.write(template.render({'subjects': subjects, 'courses': courses}))
 		
 	def post(self):
 		global error
@@ -452,7 +448,7 @@ class addClass(webapp2.RequestHandler):
 			classes = Course.query().fetch()
 			Ccount += 1
 			dup = False
-			name = self.request.get('subject') + self.request.get('num')
+			name = self.request.get('subject') + ' ' + self.request.get('num')
 			for c in classes:
 				if c.name == name:
 					dup = True
@@ -462,7 +458,7 @@ class addClass(webapp2.RequestHandler):
 				addedQuestion = "That class already exists"
 				self.redirect('/admin')
 			else:
-				C = Course(subject = self.request.get('subject'), name = (self.request.get('subject') + self.request.get('num')),
+				C = Course(subject = self.request.get('subject'), name = (self.request.get('subject') + ' ' + self.request.get('num')),
 							id = Ccount)
 				C.put()
 				time.sleep(.5)
@@ -597,7 +593,7 @@ app = webapp2.WSGIApplication([
 	('/goHome', goHome),
 	('/viewQ', viewQuestions),
 	('/password', changePassword),
-	('/publicFAQ', ViewFAQHandler),
+	('/publicFAQ', PublicFAQHandler),
 	('/viewFAQ', ViewFAQHandler),
 	('/admin', AdminHandler),
 	('/addClass', addClass),
