@@ -1,201 +1,108 @@
 <!DOCTYPE>
 <html>
 	<head>
-			<title>Student Registration</Title>
+		<title>Student Registration</Title>
 		<link href="home-page.css" rel="stylesheet">
 		<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
 		<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+		<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+		<style>
+			body {
+				background-color: #F1F3F3;
+				font-family: 'Roboto', sans-serif;
+				color: #465053; 
+			}
 
-	<style>
-	body {
-	background-color: #ECF0F1; 
-		font-family: 'Roboto', sans-serif;
-		color: #4F595C; 
-		margin: 0px; 
-		padding: 0px; 
-	}
-	#header-text {
-		padding-top: 10px; 
-		padding-bottom: 20px; 
-		margin-top: 20px; 
-		margin-bottom: 10px; 
-	}
-	#orangeBox {
-		background-color: #F96E5B; 
-		height: 50px; 
-		width: 100%; 
-	}
-	.button {
-		border-style: none;
-		border-width: 1px; 
-		border-radius: 4px 3px 4px / 5px 5px; 
-		background-color: #D7DEE6; 
-		color: #F96E5B; 
-	}
-	#course-list{
-		background-color: #D7DEE6; 
-		padding: 10px 20px 10px 20px;
-		width: 500px;
-		float: left;
-		border-style: none; 
-		border-width: 1px; 
-		border-radius: 4px 3px 4px / 5px 5px;
-		font-weight: 800; 
-	}
-	
-	#error{
-		color:#F96E5B;
-	}
-	#isInstructor{
-		color:#F96E5B;
-		}
-	</style>
+			#top-bar {
+				background-color: #FCD68A; 
+				height: 58px; 
+				width: 100%; 
+			}
+
+			#logo {
+				height: 40px;
+			}
+
+			#subtitle {
+				margin-left: 75px; 
+			}
+
+			#home-return {
+				margin-left: 75px;
+			}
+
+			#user-info {
+				width: 50%;
+			}
+
+			#class-signup {
+				width: 50%;
+			}
+
+			.btn {
+				background-color: #FCD68A;
+			}
+		</style>
 </head>
 
 <body>
-<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
-<div id="orangeBox"></div>
-<center>
-  <center>
-    <h1> Student Registration</h1>
-</center>
+	<div id="top-bar"></div>
+
+	<div class="jumbotron">
+		<div class="container">
+			<a class="navbar-brand" href="#">
+				<img id="logo" alt="FAQMan" src="http://i.imgur.com/uBa30uv.png">
+			</a>
+			<div class="container">
+				<h2 id="heading">Welcome to FAQMan!</h2>
+				<h3 id="subtitle">Please fill out this form to sign up!</h3>
+				<a id="home-return" href='/goHome'>Click here to go back to the home page</a>
+			</div>
+		</div>
+	</div>
 
 
-<form action='/signup' method = 'POST'>
-	<center>
-		<h2>Welcome to FAQMan!</h2>
-		
+	<div class="container">
 		<h3 id = "error">{{error}}</h3>
-		<br> First Name: <input type="text" name="firstname">
-		<br><br>Last name: <input type="text" name="lastname">
-		<br><br> Email: <input type="text" name="email">
-		<br><br>
-		Instructor code: <input type="password" name = "isInstructor"><br><br>
+		<form action='/signup' method='POST'>
 
-	<br> Classes(check all that you're in!):
-	<br>
-	
-		{% if anthro|length > 0 %}
-		<center>
-			<div class = "containter">
-			<div id ="course-list">
-			<h4 id = "course-name">Anthropology</h4>
-			</center>
-			{% for c in anthro %}
-				<input type="checkbox" id = "{{c.subject}}" name="{{c.id|string}}" value="{{c.name}}">{{c.name}} <br>
-			{% endfor %}
-			<br><br><br><br>
-		{% endif %}
-
-		
-		{% if bio|length > 0 %}
-		<center>
-			<div class = "containter">
-			<div id ="course-list">
-			<h4 id = "course-name">Biology</h4>
-			</center>
-			{% for c in bio %}
-				<input type="checkbox" id = "{{c.subject}}" name="{{c.id|string}}" value="{{c.name}}">{{c.name}} <br>
-			{% endfor %}
-			<br><br><br><br>
-		{% endif %}
-		
-		{% if cs|length > 0 %}
-		<center>
-			<div class = "containter">
-			<div id ="course-list">
-			<h4 id = "course-name">Computer Science</h4>
-		</center>
-			{% for c in cs %}
-				<input type="checkbox" id = "{{c.subject}}" name="{{c.id|string}}" value="{{c.name}}">{{c.name}} <br>
-			{% endfor %}
-			<br><br><br><br>
-		{% endif %}
-	
-		{% if his|length > 0 %}
-		<center>
-			<div class = "containter">
-			<div id ="course-list">
-			<h4 id = "course-name">History</h4>
-			</center>
-			{% for c in his %}
-				<input type="checkbox" id = "{{c.subject}}" name="{{c.id|string}}" value="{{c.name}}">{{c.name}} <br>
-			{% endfor %}
-			<br><br><br><br>
-		{% endif %}
-	
-	
-	{% if uwbw|length > 0 %}
-		<center>
-			<div class = "containter">
-			<div id ="course-list">
-			<h4 id = "course-name">Underwater Basked Weaving</h4>
-			</center>
-			{% for c in uwbw %}
-				<input type="checkbox" id = "{{c.subject}}" name="{{c.id|string}}" value="{{c.name}}">{{c.name}} <br>
-			{% endfor %}
-			<br><br><br><br>
-		{% endif %}
-
-	
-	
-	{% if math|length > 0 %}
-		<center>
-			<div class = "containter">
-			<div id ="course-list">
-			<h4 id = "course-name">Math</h4>
-			</center>
-			{% for c in math %}
-				<input type="checkbox" id = "{{c.subject}}" name="{{c.id|string}}" value="{{c.name}}">{{c.name}} <br>
-			{% endfor %}
-			<br><br><br><br>
-		{% endif %}
-	
-	
-	{% if eng|length > 0 %}
-		<center>
-			<div class = "containter">
-			<div id ="course-list">
-			<h4 id = "course-name">English</h4>
-			</center>
-			{% for c in eng %}
-				<input type="checkbox" id = "{{c.subject}}" name="{{c.id|string}}" value="{{c.name}}">{{c.name}} <br>
-			{% endfor %}
-			<br><br><br><br>
-		{% endif %}
-	
-	
-	{% if phy|length > 0 %}
-		<center>
-			<div class = "containter">
-			<div id ="course-list">
-			<h4 id = "course-name">Physics</h4>
-			</center>
-			{% for c in phy %}
-				<input type="checkbox" id = "{{c.subject}}" name="{{c.id|string}}" value="{{c.name}}">{{c.name}} <br>
-			{% endfor %}
-			<br><br><br><br>
-		{% endif %}
-	
-	
-	{% if ece|length > 0 %}
-		<center>
-			<div class = "containter">
-			<div id ="course-list">
-			<h4 id = "course-name">Electrical and Computer Engineering</h4>
-			</center>
-			{% for c in ece %}
-				<input type="checkbox" id = "{{c.subject}}" name="{{c.id|string}}" value="{{c.name}}">{{c.name}} <br>
-			{% endfor %}
-			<br><br><br><br>
-		{% endif %}
-	
-	
-	<center><button id="send-btn" class="button" type="submit">Signup</button></center>
-</form>
-
-	<a href='/goHome'> Go home!!!! </a><br><br><br>
-	<a href='/clear'>Clear data</a>
+				<div id="user-info" class="center-block">
+					<div class="form-group">
+						<label for="first-name-box">First Name</label>
+						<input type="text" name="firstname" class="form-control" id="first-name-box" placeholder="First Name">
+					</div>
+					<div class="form-group">
+						<label for="last-name-box">Last Name</label>
+						<input type="text" name="lastname" class="form-control" id="last-name-box" placeholder="Last Name">
+					</div>
+					<div class="form-group">
+						<label for="email-box">Email address</label>
+						<input type="text" name="email" class="form-control" id="email-box" placeholder="Email">
+					</div>
+					<div class="form-group">
+						<label for="instructor-box">Instructor Code</label>
+						<input type="password" name="isInstructor" class="form-control" id="instructor-box" placeholder="Instructor Code">
+					</div>
+					
+				</div>
+				<div id="class-signup" class="center-block">
+					{% for subject in subjects %}
+						<h2>{{subject}}</h2>
+						{% for course in courses %}
+							{% if course.subject == subject %}
+								<h4>
+									<input type="checkbox" id="{{course.subject}}" name="{{course.id|string}}" value="{{course.name}}" />
+									{{course.name}}
+								</h4>
+							{% endif %}
+						{% endfor %}
+					{% endfor %}
+				</div>
+				<center>
+					<input type="submit" id="send-btn" class="btn" value="Signup" />
+				</center>
+		</form>
+	</div>
 </body>
 
 </html>

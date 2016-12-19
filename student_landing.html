@@ -134,7 +134,7 @@
 			<div id="questions">
 				<h3>FAQ Questions</h3>
 				{% for q in questions %}
-					{% if q.classQ == classClicked %}
+					{% if q.classQ == classClicked and q.inFAQ %}
 						<h4>{{q.question}}</h4>
 						<p>{{q.answer}}</p>
 					{% endif %}
@@ -147,6 +147,7 @@
 				<textarea class="form-control" name="new-question" rows="3"></textarea>
 				<input type="hidden" name="email" value="{{usersEmail}}">
 				<input type="hidden" name="password" value="{{usersPassword}}">
+				<input type="hidden" name="add-new-question" value="{{classClicked}}" >
 				<input type="submit" class="btn" id="question-submit" value="Submit Question"></input>
 			</form>
 			<hr/>
@@ -157,6 +158,11 @@
 			{% for i in range(0, classes) %}
 				<a href="/viewFAQ?co={{user.classes[i]}}">{{user.classes[i]}}</a><br>
 			{% endfor %}
+		</div>
+		<hr/>
+
+		<div id="signout">
+			<a class="btn" href='/goHome'> Sign out </a>
 		</div>
 	</div>
 </html>

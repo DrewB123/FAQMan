@@ -5,38 +5,52 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="FAQ.css"> 
 	<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
-	<title>Hurray!</title>
-	<div id="orangeBox"></div>
+	<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+	<title>Success!</title>
 	<style>
 	
-	body{
-		background-color: #ECF0F1;
-		font-family: 'Roboto', sans-serif;
-	}
-	#orangeBox {
-		background-color: #F96E5B; 
-		height: 50px; 
-		width: 100%; 
-	}
-	#logo{
-		height: 40px;
-}
-	#message{
-		width:500px;
-		position:absolute;
-		top:40px;
-		left:60px;}
-	#home{
-		position:absolute;
-		top:200px;}
-</style>
+		body {
+			background-color: #F1F3F3;
+			font-family: 'Roboto', sans-serif;
+			color: #465053; 
+		}
+
+		#top-bar {
+			background-color: #FCD68A; 
+			height: 58px; 
+			width: 100%; 
+		}
+
+		#logo {
+			height: 40px;
+		}
+
+		#subtitle {
+			margin-left: 75px; 
+		}
+
+		#home-return {
+			margin-left: 75px;
+		}
+	</style>
 </head>
 <body>
-<header>
-	<img id="logo" src="http://i.imgur.com/tYSNXFo.png"/>
-	<h2 id = "message">Your account is created. Your default password is your last name followed by your first name</h2>
-</header>
-<a id = "home" href="/"> Go Back to the Home Page </a> 
+	<div id="top-bar"></div>
+
+	<div class="jumbotron">
+		<div class="container">
+			<a class="navbar-brand" href="#">
+				<img id="logo" alt="FAQMan" src="http://i.imgur.com/uBa30uv.png">
+			</a>
+			<div class="container">
+				<h2 id="heading">Thanks for signing up!</h2>
+				<h3 id="subtitle">Your account was created. Your password is set to your last name followed by your first name.</h3>
+				<a id="home-return" href='/goHome'>Click here to go back to the home page</a>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
 
 
 
