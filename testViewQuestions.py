@@ -32,22 +32,7 @@ class ViewQuestionsTests(unittest.TestCase):
 		response = test_request.get_response(main.app)
 		# Assert: Inspect the response.
 		mock.assert_called_with('/home')
-		
-		
-	# Mocked test: ViewQuestions post() Back to FAQ page
-	@patch.object(webapp2.RequestHandler, 'redirect')
-	def testViewQuestionsPost(self, mock): 
-		# Arrange: Make the web request. 
-		test_request = webapp2.Request.blank('/FAQ', POST={"firstname" : "TESTFIRST", "lastname" : "TESTLAST", "email" : "fake_useremail@.com", "password" : "PASSWORD"})
-		test_request.method = 'POST'
-		mock.return_value = None
-		
-		# Act: Give the request to the app. 
-		response = test_request.get_response(main.app)
-		# Assert: Inspect the response.
-		mock.assert_called_with('/FAQ')	
-		
-		
+
 	# Teardown the environment. 
 	def tearDown(self): 
 		self.testbed.deactivate()

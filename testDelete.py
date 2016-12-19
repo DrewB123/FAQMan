@@ -27,21 +27,21 @@ class DeleteTests(unittest.TestCase):
 	@patch.object(webapp2.RequestHandler, 'redirect')
 	def testDeleteGet(self, mock):
 		# Arrange: Make the web request. 
-		test_request = webapp2.Request.blank('/FAQ')
+		test_request = webapp2.Request.blank('/delete')
 		# Act: Give the request to the app
 		response = test_request.get_response(main.app)
 		# Assert: Inspect the response.
-		mock.assert_called_with('/home')	
+		mock.assert_called_with('/viewFAQ')	
 
 	# Mocked test: Delete post()
 	@patch.object(webapp2.RequestHandler, 'redirect')
 	def testDeletePostRedirect(self, mock):
 		# Arrange: Make the web request. 
-		test_request = webapp2.Request.blank('/FAQ', POST={"Questions.inFAQ": True})
+		test_request = webapp2.Request.blank('/delete', POST={"Questions.inFAQ": True})
 		# Act: Give the request to the app
 		response = test_request.get_response(main.app)
 		# Assert: Inspect the response.
-		mock.assert_called_with('/FAQ')	
+		mock.assert_called_with('/viewFAQ')	
 		
 '''
 	# Mocked test: Delete post() QUESTION NOT IN FAQ - this is something we can add in for the future
